@@ -26,4 +26,11 @@ public class CustomerService {
         final Customer savedCustomer = customerDao.findById(savedId);
         return new CustomerResponse(savedCustomer);
     }
+
+    @Transactional(readOnly = true)
+    public CustomerResponse findByEmail(String email) {
+        final Customer customer = customerDao.findByEmail(email);
+
+        return new CustomerResponse(customer);
+    }
 }
