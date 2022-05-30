@@ -83,4 +83,22 @@ public class CustomerDaoTest {
                 .extracting("email", "password", "username")
                 .contains(customer.getEmail(), customer.getPassword(), customer.getUsername());
     }
+
+    @DisplayName("id값을 통해서 비밀번호와 유저 이름을 변경할 수 있다.")
+    @Test
+    public void update() {
+        // given
+        Customer customer = new Customer("email@email.com","password1!","azpi");
+        final Long savedId = customerDao.save(customer);
+
+        // when
+        final Customer changeCustomer = new Customer(savedId, "email@email.com", "changepwd1!", "dwoo");
+        customerDao.update(changeCustomer);
+
+        // then
+        final Customer foundCustomer = customerDao.findById(savedId);
+        assertThat(foundCustomer)
+                .extracting("email", "password", "username")
+                .contains(changeCustomer.getEmail(), changeCustomer.getPassword(), changeCustomer.getUsername());
+    }
 }
