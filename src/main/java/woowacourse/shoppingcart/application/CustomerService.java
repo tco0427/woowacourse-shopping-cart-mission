@@ -17,20 +17,17 @@ public class CustomerService {
         this.customerDao = customerDao;
     }
 
-    public CustomerResponse save(CustomerRequest customerRequest) {
+    public void save(CustomerRequest customerRequest) {
         final Customer customer = new Customer(customerRequest.getEmail(), customerRequest.getPassword(),
                 customerRequest.getUsername());
 
-        final Long savedId = customerDao.save(customer);
-
-        final Customer savedCustomer = customerDao.findById(savedId);
-        return new CustomerResponse(savedCustomer);
+        customerDao.save(customer);
     }
 
     @Transactional(readOnly = true)
     public CustomerResponse findByEmail(String email) {
         final Customer customer = customerDao.findByEmail(email);
 
-        return new CustomerResponse(customer);
+        return new CustomerResponse(customer.getEmail(), customer.getUsername());
     }
 }

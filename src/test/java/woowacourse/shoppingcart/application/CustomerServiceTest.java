@@ -28,12 +28,13 @@ class CustomerServiceTest {
         final CustomerRequest request = new CustomerRequest("email@email.com", "password1!", "azpi");
 
         // when
-        final CustomerResponse response = customerService.save(request);
+        customerService.save(request);
 
         // then
+        final CustomerResponse response = customerService.findByEmail(request.getEmail());
         assertThat(response)
-                .extracting("email", "password", "username")
-                .contains(request.getEmail(), request.getPassword(), request.getUsername());
+                .extracting("email", "username")
+                .contains(request.getEmail(), request.getUsername());
     }
 
     @DisplayName("email 을 통해서 해당 Customer를 조회할 수 있다.")
@@ -48,7 +49,7 @@ class CustomerServiceTest {
 
         // then
         assertThat(response)
-                .extracting("email", "password", "username")
-                .contains(request.getEmail(), request.getPassword(), request.getUsername());
+                .extracting("email", "username")
+                .contains(request.getEmail(), request.getUsername());
     }
 }
