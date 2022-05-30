@@ -89,4 +89,21 @@ class CustomerServiceTest {
         assertThatThrownBy(() -> customerService.changePassword(request.getEmail(), changePasswordRequest))
                 .isInstanceOf(InvalidCustomerException.class);
     }
+
+    @DisplayName("email 을 기준으로 customer 정보를 업데이트할 수 있다.")
+    @Test
+    public void updateCustomer() {
+        // given
+        final CustomerRequest request =
+                new CustomerRequest("email@email.com", "password1!", "azpi");
+        customerService.save(request);
+
+        // when
+        final CustomerResponse response = customerService.update(request.getEmail(), "dwoo");
+
+        // then
+        assertThat(response)
+                .extracting("email", "username")
+                .containsExactly("email@email.com", "dwoo");
+    }
 }

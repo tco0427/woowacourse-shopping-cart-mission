@@ -48,4 +48,17 @@ public class CustomerService {
             throw new InvalidCustomerException("고객 정보가 일치하지 않습니다.");
         }
     }
+
+    public CustomerResponse update(String email, String username) {
+        updateCustomer(email, username);
+
+        return findByEmail(email);
+    }
+
+    private void updateCustomer(String email, String username) {
+        final Customer customer = customerDao.findByEmail(email);
+
+        final Customer updateCustomer = new Customer(customer.getId(), email, customer.getPassword(), username);
+        customerDao.update(updateCustomer);
+    }
 }
