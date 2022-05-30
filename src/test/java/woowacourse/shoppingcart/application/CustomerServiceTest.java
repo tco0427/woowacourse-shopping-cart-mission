@@ -8,6 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.dto.ChangePasswordRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
@@ -105,5 +106,21 @@ class CustomerServiceTest {
         assertThat(response)
                 .extracting("email", "username")
                 .containsExactly("email@email.com", "dwoo");
+    }
+
+    @DisplayName("비밀번호가 일치하면 회원정보를 삭제할 수 있다.")
+    @Test
+    public void delete() {
+        // given
+        final CustomerRequest request =
+                new CustomerRequest("email@email.com", "password1!", "azpi");
+        customerService.save(request);
+
+        // when
+        customerService.delete(request.getEmail(), request.getPassword());
+
+        // then
+        assertThatThrownBy(() -> customerService.findByEmail(request.getEmail()))
+                .isInstanceOf(EmptyResultDataAccessException.class);
     }
 }

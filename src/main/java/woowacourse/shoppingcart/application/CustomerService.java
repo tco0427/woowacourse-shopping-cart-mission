@@ -8,11 +8,13 @@ import woowacourse.shoppingcart.dto.ChangePasswordRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.exception.DeleteException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class CustomerService {
 
+    private static final int DELETE_FAIL = 0;
     private final CustomerDao customerDao;
 
     public CustomerService(CustomerDao customerDao) {
@@ -60,5 +62,17 @@ public class CustomerService {
 
         final Customer updateCustomer = new Customer(customer.getId(), email, customer.getPassword(), username);
         customerDao.update(updateCustomer);
+    }
+
+    public void delete(String email, String password) {
+        final Customer customer = customerDao.findByEmail(email);
+
+        checkPassword(customer.getPassword(), password);
+
+        final int deleteCount = customerDao.deleteById(customer.getId());
+
+        if (deleteCount == DELETE_FAIL) {
+           throw new DeleteException("고객 정보 삭제에 실패하였습니다.");
+        }
     }
 }
