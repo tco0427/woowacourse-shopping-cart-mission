@@ -4,8 +4,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.dto.ChangePasswordRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -29,5 +31,21 @@ public class CustomerService {
         final Customer customer = customerDao.findByEmail(email);
 
         return new CustomerResponse(customer.getEmail(), customer.getUsername());
+    }
+
+    public void changePassword(String email, ChangePasswordRequest request) {
+        final Customer foundCustomer = customerDao.findByEmail(email);
+
+        checkPassword(foundCustomer.getPassword(), request.getOldPassword());
+
+        final Customer customer = new Customer(foundCustomer.getId(), email, request.getNewPassword(),
+                foundCustomer.getUsername());
+        customerDao.update(customer);
+    }
+
+    private void checkPassword(String customerPassword, String inputPassword) {
+        if (!customerPassword.equals(inputPassword)) {
+            throw new InvalidCustomerException("고객 정보가 일치하지 않습니다.");
+        }
     }
 }
