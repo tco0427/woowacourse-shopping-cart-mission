@@ -1,4 +1,4 @@
-package woowacourse.auth.application;
+package woowacourse.auth.service;
 
 import org.springframework.stereotype.Service;
 
