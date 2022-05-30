@@ -19,32 +19,32 @@ public class CartItemDao {
     }
 
     public List<Long> findProductIdsByCustomerId(final Long customerId) {
-        final String sql = "SELECT product_id FROM cart_item WHERE customer_id = ?";
+        final String query = "SELECT product_id FROM cart_item WHERE customer_id = ?";
 
-        return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("product_id"), customerId);
+        return jdbcTemplate.query(query, (rs, rowNum) -> rs.getLong("product_id"), customerId);
     }
 
     public List<Long> findIdsByCustomerId(final Long customerId) {
-        final String sql = "SELECT id FROM cart_item WHERE customer_id = ?";
+        final String query = "SELECT id FROM cart_item WHERE customer_id = ?";
 
-        return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"), customerId);
+        return jdbcTemplate.query(query, (rs, rowNum) -> rs.getLong("id"), customerId);
     }
 
     public Long findProductIdById(final Long cartId) {
         try {
-            final String sql = "SELECT product_id FROM cart_item WHERE id = ?";
-            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("product_id"), cartId);
+            final String query = "SELECT product_id FROM cart_item WHERE id = ?";
+            return jdbcTemplate.queryForObject(query, (rs, rowNum) -> rs.getLong("product_id"), cartId);
         } catch (EmptyResultDataAccessException e) {
             throw new InvalidCartItemException();
         }
     }
 
     public Long addCartItem(final Long customerId, final Long productId) {
-        final String sql = "INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)";
+        final String query = "INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(con -> {
-            PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"id"});
+            PreparedStatement preparedStatement = con.prepareStatement(query, new String[]{"id"});
             preparedStatement.setLong(1, customerId);
             preparedStatement.setLong(2, productId);
             return preparedStatement;

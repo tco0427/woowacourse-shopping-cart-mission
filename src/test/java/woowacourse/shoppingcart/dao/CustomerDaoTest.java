@@ -101,4 +101,15 @@ public class CustomerDaoTest {
                 .extracting("email", "password", "username")
                 .contains(changeCustomer.getEmail(), changeCustomer.getPassword(), changeCustomer.getUsername());
     }
+
+    @DisplayName("id값을 통해서 회원정보를 삭제할 수 있다.")
+    @Test
+    public void deleteById() {
+        // given
+        Customer customer = new Customer("email@email.com","password1!","azpi");
+        final Long savedId = customerDao.save(customer);
+
+        // when & then
+        assertThat(customerDao.deleteById(savedId)).isEqualTo(1);
+    }
 }

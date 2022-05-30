@@ -18,11 +18,11 @@ public class OrderDao {
     }
 
     public Long addOrders(final Long customerId) {
-        final String sql = "INSERT INTO orders (customer_id) VALUES (?)";
+        final String query = "INSERT INTO orders (customer_id) VALUES (?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(con -> {
-            PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"id"});
+            PreparedStatement preparedStatement = con.prepareStatement(query, new String[]{"id"});
             preparedStatement.setLong(1, customerId);
             return preparedStatement;
         }, keyHolder);
@@ -30,8 +30,8 @@ public class OrderDao {
     }
 
     public List<Long> findOrderIdsByCustomerId(final Long customerId) {
-        final String sql = "SELECT id FROM orders WHERE customer_id = ? ";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"), customerId);
+        final String query = "SELECT id FROM orders WHERE customer_id = ? ";
+        return jdbcTemplate.query(query, (rs, rowNum) -> rs.getLong("id"), customerId);
     }
 
     public boolean isValidOrderId(final Long customerId, final Long orderId) {

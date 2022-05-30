@@ -51,20 +51,25 @@ public class CustomerDao {
         return simpleJdbcInsert.executeAndReturnKey(parameterSource).longValue();
     }
 
-    public Customer findById(Long id) {
+    public Customer findById(final Long id) {
         final String query = "SELECT * FROM customer WHERE id= :id";
 
         return jdbcTemplate.queryForObject(query, Map.of("id", id), CUSTOMER_ROW_MAPPER);
     }
 
     public void update(final Customer customer) {
-        final String sql = "UPDATE customer SET username = :username, password = :password where id = :id";
+        final String query = "UPDATE customer SET username = :username, password = :password where id = :id";
 
         final MapSqlParameterSource parameterSource = new MapSqlParameterSource();
         parameterSource.addValue("username", customer.getUsername());
         parameterSource.addValue("password", customer.getPassword());
         parameterSource.addValue("id", customer.getId());
 
-        jdbcTemplate.update(sql, parameterSource);
+        jdbcTemplate.update(query, parameterSource);
+    }
+
+    public int deleteById(final Long id) {
+        final String query = "DELETE FROM customer WHERE id = :id";
+        return jdbcTemplate.update(query, Map.of("id", id));
     }
 }
