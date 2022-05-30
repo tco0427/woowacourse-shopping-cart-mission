@@ -16,6 +16,8 @@ import woowacourse.shoppingcart.service.CustomerService;
 @Sql("/truncate.sql")
 class AuthServiceTest {
 
+    private static final String SAMPLE_EMAIL = "email@email.com";
+
     private final AuthService authService;
     private final CustomerService customerService;
 
@@ -30,7 +32,7 @@ class AuthServiceTest {
     public void createToken() {
         // given
         saveCustomer();
-        final TokenRequest tokenRequest = new TokenRequest("email@email.com", "password1!");
+        final TokenRequest tokenRequest = new TokenRequest(SAMPLE_EMAIL, "password1!");
 
         // when
         final TokenResponse tokenResponse = authService.createToken(tokenRequest);
@@ -41,7 +43,23 @@ class AuthServiceTest {
 
     private void saveCustomer() {
         final CustomerRequest customerRequest =
-                new CustomerRequest("email@email.com", "password1!", "dwoo");
+                new CustomerRequest(SAMPLE_EMAIL, "password1!", "dwoo");
         customerService.save(customerRequest);
+    }
+
+    @DisplayName("토큰을 받아서 유저 정보(email)를 추출해낼 수 있다.")
+    @Test
+    public void findCustomerByToken() {
+        // given
+        saveCustomer();
+        final TokenRequest tokenRequest = new TokenRequest(SAMPLE_EMAIL, "password1!");
+        final TokenResponse tokenResponse = authService.createToken(tokenRequest);
+
+        // when
+        final String accessToken = tokenResponse.getAccessToken();
+        final String email = authService.findCustomerByToken(accessToken);
+
+        // then
+        assertThat(email).isEqualTo(SAMPLE_EMAIL);
     }
 }
