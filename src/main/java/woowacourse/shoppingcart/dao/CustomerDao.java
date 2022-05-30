@@ -34,13 +34,13 @@ public class CustomerDao {
     }
 
     public Customer findById(final Long id) {
-        final String query = "SELECT * FROM customer WHERE id= :id";
+        final String query = "SELECT * FROM customer WHERE id = :id";
 
         return jdbcTemplate.queryForObject(query, Map.of("id", id), CUSTOMER_ROW_MAPPER);
     }
 
     public Customer findByEmail(final String email) {
-        final String query = "SELECT * FROM customer WHERE email= :email";
+        final String query = "SELECT * FROM customer WHERE email = :email";
 
         return jdbcTemplate.queryForObject(query, Map.of("email", email), CUSTOMER_ROW_MAPPER);
     }

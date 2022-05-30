@@ -72,8 +72,8 @@ public class CustomerDaoTest {
     @Test
     public void findByEmail() {
         // given
-        Customer customer = new Customer("email@email.com","password1!","azpi");
-        final Long savedId = customerDao.save(customer);
+        Customer customer = new Customer("email@email.com", "password1!", "azpi");
+        customerDao.save(customer);
 
         // when
         final Customer foundCustomer = customerDao.findByEmail(customer.getEmail());
@@ -88,7 +88,7 @@ public class CustomerDaoTest {
     @Test
     public void saveCustomer() {
         // given
-        Customer customer = new Customer("email@email.com","password1!","azpi");
+        Customer customer = new Customer("email@email.com", "password1!", "azpi");
 
         // when
         final Long savedId = customerDao.save(customer);
@@ -104,11 +104,12 @@ public class CustomerDaoTest {
     @Test
     public void update() {
         // given
-        Customer customer = new Customer("email@email.com","password1!","azpi");
+        Customer customer = new Customer("email@email.com", "password1!", "azpi");
         final Long savedId = customerDao.save(customer);
 
         // when
-        final Customer changeCustomer = new Customer(savedId, "email@email.com", "changepwd1!", "dwoo");
+        final Customer changeCustomer = new Customer(savedId,
+                "email@email.com", "changepwd1!", "dwoo");
         customerDao.update(changeCustomer);
 
         // then
@@ -122,7 +123,7 @@ public class CustomerDaoTest {
     @Test
     public void deleteById() {
         // given
-        Customer customer = new Customer("email@email.com","password1!","azpi");
+        Customer customer = new Customer("email@email.com", "password1!", "azpi");
         final Long savedId = customerDao.save(customer);
 
         // when & then

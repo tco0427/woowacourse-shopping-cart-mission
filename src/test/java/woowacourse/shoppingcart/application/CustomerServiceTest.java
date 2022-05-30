@@ -29,7 +29,8 @@ class CustomerServiceTest {
     @Test
     public void save() {
         // given
-        final CustomerRequest request = new CustomerRequest("email@email.com", "password1!", "azpi");
+        final CustomerRequest request =
+                new CustomerRequest("email@email.com", "password1!", "azpi");
 
         // when
         customerService.save(request);
@@ -45,7 +46,8 @@ class CustomerServiceTest {
     @Test
     public void findByEmail() {
         // given
-        final CustomerRequest request = new CustomerRequest("email@email.com", "password1!", "azpi");
+        final CustomerRequest request =
+                new CustomerRequest("email@email.com", "password1!", "azpi");
         customerService.save(request);
 
         // when
@@ -61,10 +63,12 @@ class CustomerServiceTest {
     @Test
     public void changePassword() {
         // given
-        final CustomerRequest request = new CustomerRequest("email@email.com", "password1!", "azpi");
+        final CustomerRequest request =
+                new CustomerRequest("email@email.com", "password1!", "azpi");
         customerService.save(request);
 
-        final ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest("password1!", "password2!");
+        final ChangePasswordRequest changePasswordRequest =
+                new ChangePasswordRequest("password1!", "password2!");
 
         // when & then
         assertDoesNotThrow(() -> customerService.changePassword(request.getEmail(), changePasswordRequest));
@@ -74,10 +78,12 @@ class CustomerServiceTest {
     @Test
     public void failChangePassword() {
         // given
-        final CustomerRequest request = new CustomerRequest("email@email.com", "password1!", "azpi");
+        final CustomerRequest request =
+                new CustomerRequest("email@email.com", "password1!", "azpi");
         customerService.save(request);
 
-        final ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest("password1!!", "password2!");
+        final ChangePasswordRequest changePasswordRequest =
+                new ChangePasswordRequest("password1!!", "password2!");
 
         // when & then
         assertThatThrownBy(() -> customerService.changePassword(request.getEmail(), changePasswordRequest))
