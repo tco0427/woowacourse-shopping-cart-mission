@@ -33,6 +33,18 @@ public class CustomerDao {
                 .usingGeneratedKeyColumns("id");
     }
 
+    public Customer findById(final Long id) {
+        final String query = "SELECT * FROM customer WHERE id= :id";
+
+        return jdbcTemplate.queryForObject(query, Map.of("id", id), CUSTOMER_ROW_MAPPER);
+    }
+
+    public Customer findByEmail(final String email) {
+        final String query = "SELECT * FROM customer WHERE email= :email";
+
+        return jdbcTemplate.queryForObject(query, Map.of("email", email), CUSTOMER_ROW_MAPPER);
+    }
+
     public Long findIdByUserName(final String userName) {
         try {
             final String query = "SELECT id FROM customer WHERE username = :username";
@@ -49,12 +61,6 @@ public class CustomerDao {
         parameterSource.addValue("username", customer.getUsername());
 
         return simpleJdbcInsert.executeAndReturnKey(parameterSource).longValue();
-    }
-
-    public Customer findById(final Long id) {
-        final String query = "SELECT * FROM customer WHERE id= :id";
-
-        return jdbcTemplate.queryForObject(query, Map.of("id", id), CUSTOMER_ROW_MAPPER);
     }
 
     public void update(final Customer customer) {

@@ -52,22 +52,6 @@ public class CustomerDaoTest {
         assertThat(customerId).isEqualTo(16L);
     }
 
-    @DisplayName("Customer 정보를 저장하고, id를 반환한다.")
-    @Test
-    public void saveCustomer() {
-        // given
-        Customer customer = new Customer("email@email.com","password1!","azpi");
-
-        // when
-        final Long savedId = customerDao.save(customer);
-
-        // then
-        final Customer foundCustomer = customerDao.findById(savedId);
-        assertThat(foundCustomer)
-                .extracting("email", "password", "username")
-                .contains(customer.getEmail(), customer.getPassword(), customer.getUsername());
-    }
-
     @DisplayName("id 값을 통해서 Customer 를 조회할 수 있다.")
     @Test
     public void findById() {
@@ -79,6 +63,38 @@ public class CustomerDaoTest {
         final Customer foundCustomer = customerDao.findById(savedId);
 
         // then
+        assertThat(foundCustomer)
+                .extracting("email", "password", "username")
+                .contains(customer.getEmail(), customer.getPassword(), customer.getUsername());
+    }
+
+    @DisplayName("email 은 유일하므로 email 값을 통해서 Customer 를 조회할 수 있다.")
+    @Test
+    public void findByEmail() {
+        // given
+        Customer customer = new Customer("email@email.com","password1!","azpi");
+        final Long savedId = customerDao.save(customer);
+
+        // when
+        final Customer foundCustomer = customerDao.findByEmail(customer.getEmail());
+
+        // then
+        assertThat(foundCustomer)
+                .extracting("email", "password", "username")
+                .contains(customer.getEmail(), customer.getPassword(), customer.getUsername());
+    }
+
+    @DisplayName("Customer 정보를 저장하고, id를 반환한다.")
+    @Test
+    public void saveCustomer() {
+        // given
+        Customer customer = new Customer("email@email.com","password1!","azpi");
+
+        // when
+        final Long savedId = customerDao.save(customer);
+
+        // then
+        final Customer foundCustomer = customerDao.findById(savedId);
         assertThat(foundCustomer)
                 .extracting("email", "password", "username")
                 .contains(customer.getEmail(), customer.getPassword(), customer.getUsername());
