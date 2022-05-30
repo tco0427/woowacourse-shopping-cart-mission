@@ -17,9 +17,6 @@ create table customer
     primary key (id)
 ) engine=InnoDB default charset=utf8mb4;
 
-alter table customer
-    add unique key (username);
-
 create table product
 (
     id        bigint       not null auto_increment,
