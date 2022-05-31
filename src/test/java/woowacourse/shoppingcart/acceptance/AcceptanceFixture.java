@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.acceptance;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import io.restassured.RestAssured;
+import io.restassured.http.Header;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.springframework.http.MediaType;
@@ -21,6 +22,15 @@ public class AcceptanceFixture {
 
     public static ExtractableResponse<Response> get(String path) {
         return RestAssured.given().log().all()
+                .when()
+                .get(path)
+                .then().log().all()
+                .extract();
+    }
+
+    public static ExtractableResponse<Response> get(String path, Header header) {
+        return RestAssured.given().log().all()
+                .header(header)
                 .when()
                 .get(path)
                 .then().log().all()

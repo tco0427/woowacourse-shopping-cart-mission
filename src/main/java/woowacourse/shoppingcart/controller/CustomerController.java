@@ -2,11 +2,14 @@ package woowacourse.shoppingcart.controller;
 
 import java.net.URI;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.dto.CustomerRequest;
+import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.service.CustomerService;
 
 @RestController
@@ -24,5 +27,11 @@ public class CustomerController {
         customerService.save(request);
 
         return ResponseEntity.created(URI.create("/login")).build();
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<CustomerResponse> findCustomer(@AuthenticationPrincipal String email) {
+        final CustomerResponse response = customerService.findByEmail(email);
+        return ResponseEntity.ok(response);
     }
 }
