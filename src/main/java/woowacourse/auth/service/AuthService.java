@@ -8,7 +8,6 @@ import woowacourse.auth.exception.InvalidTokenException;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Service
 @Transactional
@@ -24,16 +23,10 @@ public class AuthService {
 
     public TokenResponse createToken(TokenRequest request) {
         final Customer customer = customerDao.findByEmail(request.getEmail());
-        checkPassword(customer.getPassword(), request.getPassword());
+        customer.checkPassword(request.getPassword());
 
         final String token = jwtTokenProvider.createToken(request.getEmail());
         return new TokenResponse(token);
-    }
-
-    private void checkPassword(String customerPassword, String inputPassword) {
-        if (!customerPassword.equals(inputPassword)) {
-            throw new InvalidCustomerException("고객 정보가 일치하지 않습니다.");
-        }
     }
 
     public String findCustomerByToken(String token) {

@@ -7,7 +7,6 @@ import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.ChangePasswordRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.DeleteException;
 
 @Service
@@ -37,18 +36,11 @@ public class CustomerService {
 
     public void changePassword(String email, ChangePasswordRequest request) {
         final Customer foundCustomer = customerDao.findByEmail(email);
-
-        checkPassword(foundCustomer.getPassword(), request.getOldPassword());
+        foundCustomer.checkPassword(request.getOldPassword());
 
         final Customer customer = new Customer(foundCustomer.getId(), email, request.getNewPassword(),
                 foundCustomer.getUsername());
         customerDao.update(customer);
-    }
-
-    private void checkPassword(String customerPassword, String inputPassword) {
-        if (!customerPassword.equals(inputPassword)) {
-            throw new InvalidCustomerException("고객 정보가 일치하지 않습니다.");
-        }
     }
 
     public CustomerResponse update(String email, String username) {
@@ -66,8 +58,7 @@ public class CustomerService {
 
     public void delete(String email, String password) {
         final Customer customer = customerDao.findByEmail(email);
-
-        checkPassword(customer.getPassword(), password);
+        customer.checkPassword(password);
 
         final int deleteCount = customerDao.deleteById(customer.getId());
 
