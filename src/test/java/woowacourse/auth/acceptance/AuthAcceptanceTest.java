@@ -3,6 +3,7 @@ package woowacourse.auth.acceptance;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 import io.restassured.http.Header;
 import io.restassured.response.ExtractableResponse;
@@ -23,6 +24,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
     private static final String BEARER = "Bearer ";
     private static final int LOGIN_FAIL = 2001;
+    private static final int INVALID_TOKEN = 3002;
 
     @DisplayName("Bearer Auth 로그인 성공")
     @Test
@@ -71,10 +73,12 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void myInfoWithWrongBearerAuth() {
         // when
-        // 유효하지 않은 토큰을 사용하여 내 정보 조회를 요청하면
+        final Header header = new Header("Authorization", "Bearer header");
+        final ExtractableResponse<Response> response = AcceptanceFixture.get("/api/customers/me", header);
 
         // then
-        // 내 정보 조회 요청이 거부된다
+        assertThat(response.statusCode()).isEqualTo(UNAUTHORIZED.value());
+        assertThat(extractErrorCode(response)).isEqualTo(INVALID_TOKEN);
     }
 
     private String extractAccessToken(ExtractableResponse<Response> response) {

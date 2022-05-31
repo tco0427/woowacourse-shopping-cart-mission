@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.controller;
 
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
+
 import java.util.stream.Collectors;
 import javax.validation.ConstraintViolationException;
 import org.springframework.dao.DuplicateKeyException;
@@ -45,7 +47,7 @@ public class ControllerAdvice {
 
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> handle(InvalidTokenException e) {
-        return ResponseEntity.badRequest().body(ErrorResponse.INVALID_TOKEN);
+        return ResponseEntity.status(UNAUTHORIZED).body(ErrorResponse.INVALID_TOKEN);
     }
 
     @ExceptionHandler
