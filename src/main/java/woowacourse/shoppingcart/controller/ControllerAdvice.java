@@ -60,6 +60,11 @@ public class ControllerAdvice {
         return ResponseEntity.status(UNAUTHORIZED).body(ErrorResponse.INCORRECT_PASSWORD);
     }
 
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handle(IllegalArgumentException e) {
+        return ResponseEntity.badRequest().body(ErrorResponse.from(e.getMessage()));
+    }
+
     @ExceptionHandler(EmptyResultDataAccessException.class)
     public ResponseEntity<String> handle() {
         return ResponseEntity.badRequest().body("존재하지 않는 데이터 요청입니다.");
