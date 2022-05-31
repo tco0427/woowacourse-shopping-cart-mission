@@ -1,5 +1,9 @@
 package woowacourse.auth.acceptance;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.http.HttpStatus.OK;
+
+import io.restassured.http.Header;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
@@ -14,27 +18,31 @@ import woowacourse.shoppingcart.dto.CustomerResponse;
 @DisplayName("인증 관련 기능")
 public class AuthAcceptanceTest extends AcceptanceTest {
 
+    private static final String BEARER = "Bearer ";
+
     @DisplayName("Bearer Auth 로그인 성공")
     @Test
     void myInfoWithBearerAuth() {
         // given
-        final CustomerRequest customerRequest =
+        final CustomerRequest request =
                 new CustomerRequest("email@email.com", "password1!", "dwoo");
+        AcceptanceFixture.post(request, "/api/customers");
 
-        final ExtractableResponse<Response> customerResponse
-                = AcceptanceFixture.post(customerRequest, "/api/customers");
-
-        final TokenRequest tokenRequest = new TokenRequest(customerRequest.getEmail(), customerRequest.getPassword());
-        final ExtractableResponse<Response> response = AcceptanceFixture.post(tokenRequest, "/api/auth/login");
+        final TokenRequest tokenRequest = new TokenRequest(request.getEmail(), request.getPassword());
+        final ExtractableResponse<Response> loginResponse = AcceptanceFixture.post(tokenRequest, "/api/auth/login");
 
         // when
-        response.jsonPath()
-                .getObject(".", TokenResponse.class)
-                .getAccessToken();
-        // 발급 받은 토큰을 사용하여 내 정보 조회를 요청하면
+        final String accessToken = extractAccessToken(loginResponse);
+
+        final Header header = new Header("Authorization", BEARER + accessToken);
+        final ExtractableResponse<Response> response = AcceptanceFixture.get("/api/customers/me", header);
+        final CustomerResponse customerResponse = extractCustomer(response);
 
         // then
-        // 내 정보가 조회된다
+        assertThat(loginResponse.statusCode()).isEqualTo(OK.value());
+        assertThat(customerResponse)
+                .extracting("email", "username")
+                .containsExactly(request.getEmail(), request.getUsername());
     }
 
     @DisplayName("Bearer Auth 로그인 실패")
@@ -60,9 +68,14 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // 내 정보 조회 요청이 거부된다
     }
 
-    private String extractEmail(ExtractableResponse<Response> response) {
+    private String extractAccessToken(ExtractableResponse<Response> response) {
         return response.jsonPath()
-                .getObject(".", CustomerResponse.class)
-                .getEmail();
+                .getObject(".", TokenResponse.class)
+                .getAccessToken();
+    }
+
+    private CustomerResponse extractCustomer(ExtractableResponse<Response> response) {
+        return response.jsonPath()
+                .getObject(".", CustomerResponse.class);
     }
 }
