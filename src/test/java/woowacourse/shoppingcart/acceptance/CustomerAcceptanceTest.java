@@ -13,6 +13,7 @@ import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
@@ -63,6 +64,29 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("내 정보 수정")
     @Test
     void updateMe() {
+        // given
+        final CustomerRequest request =
+                new CustomerRequest("email@email.com", "password1!", "azpi");
+        AcceptanceFixture.post(request, "/api/customers");
+
+        final TokenRequest tokenRequest = new TokenRequest("email@email.com", "password1!");
+        final ExtractableResponse<Response> loginResponse =
+                AcceptanceFixture.post(tokenRequest, "/api/auth/login");
+        final String accessToken = extractAccessToken(loginResponse);
+
+        // when
+        final CustomerUpdateRequest updateRequest = new CustomerUpdateRequest("dwoo");
+        Header header = new Header("Authorization", BEARER + accessToken);
+        final ExtractableResponse<Response> response =
+                AcceptanceFixture.patch(updateRequest,"/api/customers/me?target=generalInfo", header);
+
+        final CustomerResponse customerResponse = extractCustomer(response);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(OK.value());
+        assertThat(customerResponse)
+                .extracting("email", "username")
+                .containsExactly(request.getEmail(), updateRequest.getUsername());
     }
 
     @DisplayName("회원탈퇴")
