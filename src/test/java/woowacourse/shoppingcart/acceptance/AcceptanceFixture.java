@@ -57,8 +57,11 @@ public class AcceptanceFixture {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> delete(String path) {
+    public static <T> ExtractableResponse<Response> delete(T params, String path, Header header) {
         return RestAssured.given().log().all()
+                .header(header)
+                .body(params)
+                .contentType(APPLICATION_JSON_VALUE)
                 .when()
                 .delete(path)
                 .then().log().all()

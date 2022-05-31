@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 
 import io.restassured.http.Header;
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.dto.ChangePasswordRequest;
+import woowacourse.shoppingcart.dto.CustomerDeletionRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
@@ -118,6 +120,26 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("회원탈퇴")
     @Test
     void deleteMe() {
+        // given
+        final CustomerRequest request =
+                new CustomerRequest("email@email.com", "password1!", "azpi");
+        AcceptanceFixture.post(request, "/api/customers");
+
+        final TokenRequest tokenRequest = new TokenRequest("email@email.com", "password1!");
+        final ExtractableResponse<Response> loginResponse =
+                AcceptanceFixture.post(tokenRequest, "/api/auth/login");
+        final String accessToken = extractAccessToken(loginResponse);
+
+        // when
+        final CustomerDeletionRequest customerDeletionRequest =
+                new CustomerDeletionRequest(request.getPassword());
+        Header header = new Header("Authorization", BEARER + accessToken);
+        final ExtractableResponse<Response> response =
+                AcceptanceFixture.delete(customerDeletionRequest,"/api/customers/me", header);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(NO_CONTENT.value());
+        assertThat(response.header("Location")).isNotBlank().isEqualTo("/");
     }
 
     private String extractAccessToken(ExtractableResponse<Response> response) {
