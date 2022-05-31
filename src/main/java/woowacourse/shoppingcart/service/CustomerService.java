@@ -14,6 +14,7 @@ import woowacourse.shoppingcart.exception.DeleteException;
 public class CustomerService {
 
     private static final int DELETE_FAIL = 0;
+
     private final CustomerDao customerDao;
 
     public CustomerService(CustomerDao customerDao) {

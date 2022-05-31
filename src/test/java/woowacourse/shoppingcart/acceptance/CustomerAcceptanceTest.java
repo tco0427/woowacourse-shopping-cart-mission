@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
@@ -17,6 +18,7 @@ import woowacourse.shoppingcart.dto.CustomerDeletionRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
+import woowacourse.shoppingcart.dto.ErrorResponse;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
@@ -142,6 +144,24 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         assertThat(response.header("Location")).isNotBlank().isEqualTo("/");
     }
 
+    @DisplayName("이미 등록되어 있는 이메일로는 회원가입이 불가능하다.")
+    @Test
+    public void duplicateEmail() {
+        // given
+        final CustomerRequest request =
+                new CustomerRequest("email@email.com", "password1!", "azpi");
+        AcceptanceFixture.post(request, "/api/customers");
+
+        // when
+        final ExtractableResponse<Response> response = AcceptanceFixture.post(request, "/api/customers");
+        final ErrorResponse errorResponse = extractError(response);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(BAD_REQUEST.value());
+        assertThat(errorResponse).extracting("errorCode", "message")
+                .contains(1001, "duplicated Email");
+    }
+
     private String extractAccessToken(ExtractableResponse<Response> response) {
         return response.jsonPath()
                 .getObject(".", TokenResponse.class)
@@ -151,5 +171,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     private CustomerResponse extractCustomer(ExtractableResponse<Response> response) {
         return response.jsonPath()
                 .getObject(".", CustomerResponse.class);
+    }
+
+    private ErrorResponse extractError(ExtractableResponse<Response> response) {
+        return response.jsonPath()
+                .getObject(".", ErrorResponse.class);
     }
 }
