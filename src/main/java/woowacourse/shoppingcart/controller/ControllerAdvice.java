@@ -1,10 +1,12 @@
 package woowacourse.shoppingcart.controller;
 
+import java.util.stream.Collectors;
 import javax.validation.ConstraintViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -24,13 +26,19 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler
-    public ResponseEntity<ErrorResponse> handle(DuplicateKeyException exception) {
+    public ResponseEntity<ErrorResponse> handle(DuplicateKeyException e) {
         return ResponseEntity.badRequest().body(ErrorResponse.DUPLICATED_EMAIL);
     }
 
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> requestBodyInvalidError(MethodArgumentNotValidException e) {
-        return ResponseEntity.badRequest().body(ErrorResponse.INVALID_VALUE);
+        return ResponseEntity.badRequest().body(ErrorResponse.from(getMessage(e)));
+    }
+
+    private String getMessage(MethodArgumentNotValidException e) {
+        return e.getFieldErrors().stream()
+                .map(FieldError::getDefaultMessage)
+                .collect(Collectors.joining(" "));
     }
 
     @ExceptionHandler(EmptyResultDataAccessException.class)

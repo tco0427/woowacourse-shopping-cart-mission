@@ -3,6 +3,7 @@ package woowacourse.auth.controller;
 import static org.springframework.http.HttpStatus.OK;
 
 import java.net.URI;
+import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,7 +24,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<TokenResponse> signIn(@RequestBody TokenRequest request) {
+    public ResponseEntity<TokenResponse> signIn(@Valid @RequestBody TokenRequest request) {
         final TokenResponse token = authService.createToken(request);
 
         return ResponseEntity.status(OK).location(URI.create("/")).body(token);
