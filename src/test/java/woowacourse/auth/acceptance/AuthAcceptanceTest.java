@@ -1,6 +1,7 @@
 package woowacourse.auth.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.OK;
 
 import io.restassured.http.Header;
@@ -8,6 +9,8 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.acceptance.AcceptanceFixture;
@@ -19,6 +22,7 @@ import woowacourse.shoppingcart.dto.CustomerResponse;
 public class AuthAcceptanceTest extends AcceptanceTest {
 
     private static final String BEARER = "Bearer ";
+    private static final int LOGIN_FAIL = 2001;
 
     @DisplayName("Bearer Auth 로그인 성공")
     @Test
@@ -46,16 +50,21 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     }
 
     @DisplayName("Bearer Auth 로그인 실패")
-    @Test
-    void myInfoWithBadBearerAuth() {
+    @ParameterizedTest
+    @CsvSource(value = {"email@email.com, password2!", "email2@email.com, password1!"})
+    void myInfoWithBadBearerAuth(String email, String password) {
         // given
-        // 회원이 등록되어 있고
+        final CustomerRequest request =
+                new CustomerRequest("email@email.com", "password1!", "dwoo");
+        AcceptanceFixture.post(request, "/api/customers");
 
         // when
-        // 잘못된 id, password를 사용해 토큰을 요청하면
+        final TokenRequest tokenRequest = new TokenRequest(email, password);
+        final ExtractableResponse<Response> response = AcceptanceFixture.post(tokenRequest, "/api/auth/login");
 
         // then
-        // 토큰 발급 요청이 거부된다
+        assertThat(response.statusCode()).isEqualTo(BAD_REQUEST.value());
+        assertThat(extractErrorCode(response)).isEqualTo(LOGIN_FAIL);
     }
 
     @DisplayName("Bearer Auth 유효하지 않은 토큰")
@@ -77,5 +86,9 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     private CustomerResponse extractCustomer(ExtractableResponse<Response> response) {
         return response.jsonPath()
                 .getObject(".", CustomerResponse.class);
+    }
+
+    private int extractErrorCode(ExtractableResponse<Response> response) {
+        return response.jsonPath().getInt("errorCode");
     }
 }
