@@ -5,6 +5,7 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 import io.restassured.http.Header;
 import io.restassured.response.ExtractableResponse;
@@ -26,6 +27,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
     private static final String BEARER = "Bearer ";
     private static final int DUPLICATE_EMAIL = 1001;
+    private static final int INCORRECT_PASSWORD = 3001;
 
     @DisplayName("email, password, username 을 통해서 회원가입을 할 수 있다.")
     @Test
@@ -178,6 +180,31 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // then
         assertThat(response.statusCode()).isEqualTo(BAD_REQUEST.value());
         assertThat(extractErrorCode(response)).isEqualTo(errorCode);
+    }
+
+    @DisplayName("기존 패스워드와 불일치하는 경우 비밀번호 변경이 불가능하다.")
+    @Test
+    public void invalidChangePassword() {
+        // given
+        final CustomerRequest request =
+                new CustomerRequest("email@email.com", "password1!", "azpi");
+        AcceptanceFixture.post(request, "/api/customers");
+
+        final TokenRequest tokenRequest = new TokenRequest("email@email.com", "password1!");
+        final ExtractableResponse<Response> loginResponse =
+                AcceptanceFixture.post(tokenRequest, "/api/auth/login");
+        final String accessToken = extractAccessToken(loginResponse);
+
+        // when
+        final ChangePasswordRequest changePasswordRequest =
+                new ChangePasswordRequest("incorrect1!", "newpwd1!");
+        Header header = new Header("Authorization", BEARER + accessToken);
+        final ExtractableResponse<Response> response =
+                AcceptanceFixture.patch(changePasswordRequest,"/api/customers/me?target=password", header);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(UNAUTHORIZED.value());
+        assertThat(extractErrorCode(response)).isEqualTo(INCORRECT_PASSWORD);
     }
 
     private String extractAccessToken(ExtractableResponse<Response> response) {

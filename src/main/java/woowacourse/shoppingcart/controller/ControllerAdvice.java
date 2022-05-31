@@ -55,6 +55,11 @@ public class ControllerAdvice {
         return ResponseEntity.badRequest().body(ErrorResponse.LOGIN_FAIL);
     }
 
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handle(InvalidCustomerException e) {
+        return ResponseEntity.status(UNAUTHORIZED).body(ErrorResponse.INCORRECT_PASSWORD);
+    }
+
     @ExceptionHandler(EmptyResultDataAccessException.class)
     public ResponseEntity<String> handle() {
         return ResponseEntity.badRequest().body("존재하지 않는 데이터 요청입니다.");
@@ -69,7 +74,6 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler({
-            InvalidCustomerException.class,
             InvalidCartItemException.class,
             InvalidProductException.class,
             InvalidOrderException.class,
