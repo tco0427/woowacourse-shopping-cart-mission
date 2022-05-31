@@ -11,6 +11,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
+import woowacourse.shoppingcart.dto.ChangePasswordRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
@@ -32,7 +33,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         // then
         assertThat(response.statusCode()).isEqualTo(CREATED.value());
-        assertThat(response.header("Location")).isNotBlank();
+        assertThat(response.header("Location")).isNotBlank().isEqualTo("/login");
     }
 
     @DisplayName("내 정보 조회")
@@ -87,6 +88,31 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         assertThat(customerResponse)
                 .extracting("email", "username")
                 .containsExactly(request.getEmail(), updateRequest.getUsername());
+    }
+
+    @DisplayName("내 비밀번호 변경")
+    @Test
+    void changePassword() {
+        // given
+        final CustomerRequest request =
+                new CustomerRequest("email@email.com", "password1!", "azpi");
+        AcceptanceFixture.post(request, "/api/customers");
+
+        final TokenRequest tokenRequest = new TokenRequest("email@email.com", "password1!");
+        final ExtractableResponse<Response> loginResponse =
+                AcceptanceFixture.post(tokenRequest, "/api/auth/login");
+        final String accessToken = extractAccessToken(loginResponse);
+
+        // when
+        final ChangePasswordRequest changePasswordRequest =
+                new ChangePasswordRequest(request.getPassword(), "newPassword1!");
+        Header header = new Header("Authorization", BEARER + accessToken);
+        final ExtractableResponse<Response> response =
+                AcceptanceFixture.patch(changePasswordRequest,"/api/customers/me?target=password", header);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(OK.value());
+        assertThat(response.header("Location")).isNotBlank().isEqualTo("/login");
     }
 
     @DisplayName("회원탈퇴")

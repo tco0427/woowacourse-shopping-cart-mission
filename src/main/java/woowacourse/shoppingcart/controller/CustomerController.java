@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.support.AuthenticationPrincipal;
+import woowacourse.shoppingcart.dto.ChangePasswordRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
@@ -45,4 +46,11 @@ public class CustomerController {
         return ResponseEntity.ok(response);
     }
 
+    @PatchMapping(path = "/me", params = "target=password")
+    public ResponseEntity<Void> changePassword(
+            @AuthenticationPrincipal String email, @RequestBody ChangePasswordRequest request) {
+        customerService.changePassword(email, request);
+
+        return ResponseEntity.ok().location(URI.create("/login")).build();
+    }
 }
