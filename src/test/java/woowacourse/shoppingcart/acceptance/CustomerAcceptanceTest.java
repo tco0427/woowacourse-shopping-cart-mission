@@ -23,6 +23,8 @@ import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
 public class CustomerAcceptanceTest extends AcceptanceTest {
 
     private static final String BEARER = "Bearer ";
+    private static final int DUPLICATE_EMAIL = 1001;
+    private static final int INVALID_VALUE = 1002;
 
     @DisplayName("email, password, username 을 통해서 회원가입을 할 수 있다.")
     @Test
@@ -108,7 +110,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         // when
         final ChangePasswordRequest changePasswordRequest =
-                new ChangePasswordRequest(request.getPassword(), "newPassword1!");
+                new ChangePasswordRequest(request.getPassword(), "newpwd1!");
         Header header = new Header("Authorization", BEARER + accessToken);
         final ExtractableResponse<Response> response =
                 AcceptanceFixture.patch(changePasswordRequest,"/api/customers/me?target=password", header);
@@ -156,7 +158,22 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         // then
         assertThat(response.statusCode()).isEqualTo(BAD_REQUEST.value());
-        assertThat(extractErrorCode(response)).isEqualTo(1001);
+        assertThat(extractErrorCode(response)).isEqualTo(DUPLICATE_EMAIL);
+    }
+
+    @DisplayName("잘못된 형식의 입력인 경우 예외를 발생시킨다.")
+    @Test
+    public void invalidValue() {
+        // given
+        final CustomerRequest request =
+                new CustomerRequest("email", "pwd", "azpi");
+
+        // when
+        final ExtractableResponse<Response> response = AcceptanceFixture.post(request, "/api/customers");
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(BAD_REQUEST.value());
+        assertThat(extractErrorCode(response)).isEqualTo(INVALID_VALUE);
     }
 
     private String extractAccessToken(ExtractableResponse<Response> response) {
