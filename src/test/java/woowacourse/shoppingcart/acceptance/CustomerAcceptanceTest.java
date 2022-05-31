@@ -18,7 +18,6 @@ import woowacourse.shoppingcart.dto.CustomerDeletionRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
-import woowacourse.shoppingcart.dto.ErrorResponse;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
@@ -154,12 +153,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         // when
         final ExtractableResponse<Response> response = AcceptanceFixture.post(request, "/api/customers");
-        final ErrorResponse errorResponse = extractError(response);
 
         // then
         assertThat(response.statusCode()).isEqualTo(BAD_REQUEST.value());
-        assertThat(errorResponse).extracting("errorCode", "message")
-                .contains(1001, "Duplicated Email");
+        assertThat(extractErrorCode(response)).isEqualTo(1001);
     }
 
     private String extractAccessToken(ExtractableResponse<Response> response) {
@@ -173,8 +170,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .getObject(".", CustomerResponse.class);
     }
 
-    private ErrorResponse extractError(ExtractableResponse<Response> response) {
-        return response.jsonPath()
-                .getObject(".", ErrorResponse.class);
+    private int extractErrorCode(ExtractableResponse<Response> response) {
+        return response.jsonPath().getInt("errorCode");
     }
 }

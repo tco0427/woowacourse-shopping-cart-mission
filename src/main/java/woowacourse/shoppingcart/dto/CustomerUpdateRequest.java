@@ -4,9 +4,7 @@ import javax.validation.constraints.NotBlank;
 
 public class CustomerUpdateRequest {
 
-    private static final String INVALID_VALUE = "Invalid Value";
-
-    @NotBlank(message = INVALID_VALUE)
+    @NotBlank
     private String username;
 
     public CustomerUpdateRequest() {

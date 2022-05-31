@@ -1,19 +1,19 @@
 package woowacourse.shoppingcart.controller;
 
+import javax.validation.ConstraintViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import woowacourse.shoppingcart.dto.ErrorResponse;
-import woowacourse.shoppingcart.exception.*;
-
-import javax.validation.ConstraintViolationException;
-import java.util.List;
+import woowacourse.shoppingcart.exception.InvalidCartItemException;
+import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.exception.InvalidOrderException;
+import woowacourse.shoppingcart.exception.InvalidProductException;
+import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
 @RestControllerAdvice
 public class ControllerAdvice {
@@ -25,20 +25,17 @@ public class ControllerAdvice {
 
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> handle(DuplicateKeyException exception) {
-        return ResponseEntity.badRequest().body(new ErrorResponse(1001, "Duplicated Email"));
+        return ResponseEntity.badRequest().body(ErrorResponse.DUPLICATED_EMAIL);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> requestBodyInvalidError(MethodArgumentNotValidException e) {
+        return ResponseEntity.badRequest().body(ErrorResponse.INVALID_VALUE);
     }
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
     public ResponseEntity<String> handle() {
         return ResponseEntity.badRequest().body("존재하지 않는 데이터 요청입니다.");
-    }
-
-    @ExceptionHandler({MethodArgumentNotValidException.class})
-    public ResponseEntity<String> handleInvalidRequest(final BindingResult bindingResult) {
-        final List<FieldError> fieldErrors = bindingResult.getFieldErrors();
-        final FieldError mainError = fieldErrors.get(0);
-
-        return ResponseEntity.badRequest().body(mainError.getDefaultMessage());
     }
 
     @ExceptionHandler({
