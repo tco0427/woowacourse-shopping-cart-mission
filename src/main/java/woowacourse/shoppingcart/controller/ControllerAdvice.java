@@ -25,7 +25,7 @@ public class ControllerAdvice {
 
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> handle(DuplicateKeyException exception) {
-        return ResponseEntity.badRequest().body(new ErrorResponse(1001, "duplicated Email"));
+        return ResponseEntity.badRequest().body(new ErrorResponse(1001, "Duplicated Email"));
     }
 
     @ExceptionHandler(EmptyResultDataAccessException.class)

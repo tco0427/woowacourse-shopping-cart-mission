@@ -159,7 +159,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // then
         assertThat(response.statusCode()).isEqualTo(BAD_REQUEST.value());
         assertThat(errorResponse).extracting("errorCode", "message")
-                .contains(1001, "duplicated Email");
+                .contains(1001, "Duplicated Email");
     }
 
     private String extractAccessToken(ExtractableResponse<Response> response) {

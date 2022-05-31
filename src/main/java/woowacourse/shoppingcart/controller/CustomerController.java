@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.controller;
 
 import java.net.URI;
+import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,7 +29,7 @@ public class CustomerController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> save(@RequestBody CustomerRequest request) {
+    public ResponseEntity<Void> save(@Valid @RequestBody CustomerRequest request) {
         customerService.save(request);
 
         return ResponseEntity.created(URI.create("/login")).build();
@@ -42,7 +43,7 @@ public class CustomerController {
 
     @PatchMapping(path = "/me", params = "target=generalInfo")
     public ResponseEntity<CustomerResponse> updateCustomer(
-            @AuthenticationPrincipal String email, @RequestBody CustomerUpdateRequest request) {
+            @AuthenticationPrincipal String email, @Valid @RequestBody CustomerUpdateRequest request) {
         final CustomerResponse response = customerService.update(email, request.getUsername());
 
         return ResponseEntity.ok(response);
@@ -50,7 +51,7 @@ public class CustomerController {
 
     @PatchMapping(path = "/me", params = "target=password")
     public ResponseEntity<Void> changePassword(
-            @AuthenticationPrincipal String email, @RequestBody ChangePasswordRequest request) {
+            @AuthenticationPrincipal String email, @Valid @RequestBody ChangePasswordRequest request) {
         customerService.changePassword(email, request);
 
         return ResponseEntity.ok().location(URI.create("/login")).build();
@@ -58,7 +59,7 @@ public class CustomerController {
 
     @DeleteMapping("/me")
     public ResponseEntity<Void> delete(
-            @AuthenticationPrincipal String email, @RequestBody CustomerDeletionRequest request) {
+            @AuthenticationPrincipal String email, @Valid @RequestBody CustomerDeletionRequest request) {
         customerService.delete(email, request.getPassword());
 
         return ResponseEntity.noContent().location(URI.create("/")).build();
