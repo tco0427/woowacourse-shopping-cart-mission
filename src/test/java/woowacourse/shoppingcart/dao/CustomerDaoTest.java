@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static woowacourse.CustomerFixture.SAMPLE_CUSTOMER;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,7 +28,6 @@ public class CustomerDaoTest {
     @DisplayName("username을 통해 아이디를 찾으면, id를 반환한다.")
     @Test
     void findIdByUserNameTest() {
-
         // given
         final String userName = "puterism";
 
@@ -41,7 +41,6 @@ public class CustomerDaoTest {
     @DisplayName("대소문자를 구별하지 않고 username을 통해 아이디를 찾으면, id를 반환한다.")
     @Test
     void findIdByUserNameTestIgnoreUpperLowerCase() {
-
         // given
         final String userName = "gwangyeol-iM";
 
@@ -56,7 +55,7 @@ public class CustomerDaoTest {
     @Test
     public void findById() {
         // given
-        Customer customer = new Customer("email@email.com","password1!","azpi");
+        Customer customer = SAMPLE_CUSTOMER;
         final Long savedId = customerDao.save(customer);
 
         // when
@@ -72,7 +71,7 @@ public class CustomerDaoTest {
     @Test
     public void findByEmail() {
         // given
-        Customer customer = new Customer("email@email.com", "password1!", "azpi");
+        Customer customer = SAMPLE_CUSTOMER;
         customerDao.save(customer);
 
         // when
@@ -88,7 +87,7 @@ public class CustomerDaoTest {
     @Test
     public void saveCustomer() {
         // given
-        Customer customer = new Customer("email@email.com", "password1!", "azpi");
+        Customer customer = SAMPLE_CUSTOMER;
 
         // when
         final Long savedId = customerDao.save(customer);
@@ -104,12 +103,12 @@ public class CustomerDaoTest {
     @Test
     public void update() {
         // given
-        Customer customer = new Customer("email@email.com", "password1!", "azpi");
+        Customer customer = SAMPLE_CUSTOMER;
         final Long savedId = customerDao.save(customer);
 
         // when
         final Customer changeCustomer = new Customer(savedId,
-                "email@email.com", "changepwd1!", "dwoo");
+                "email@email.com", "changepwd1!", "changeName");
         customerDao.update(changeCustomer);
 
         // then
@@ -123,7 +122,7 @@ public class CustomerDaoTest {
     @Test
     public void deleteById() {
         // given
-        Customer customer = new Customer("email@email.com", "password1!", "azpi");
+        Customer customer = SAMPLE_CUSTOMER;
         final Long savedId = customerDao.save(customer);
 
         // when & then

@@ -3,6 +3,9 @@ package woowacourse.shoppingcart.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static woowacourse.CustomerFixture.SAMPLE_EMAIL;
+import static woowacourse.CustomerFixture.SAMPLE_PASSWORD;
+import static woowacourse.CustomerFixture.SAMPLE_USERNAME;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,8 +33,7 @@ class CustomerServiceTest {
     @Test
     public void save() {
         // given
-        final CustomerRequest request =
-                new CustomerRequest("email@email.com", "password1!", "azpi");
+        final CustomerRequest request = new CustomerRequest(SAMPLE_EMAIL, SAMPLE_PASSWORD, SAMPLE_USERNAME);
 
         // when
         customerService.save(request);
@@ -47,8 +49,7 @@ class CustomerServiceTest {
     @Test
     public void findByEmail() {
         // given
-        final CustomerRequest request =
-                new CustomerRequest("email@email.com", "password1!", "azpi");
+        final CustomerRequest request = new CustomerRequest(SAMPLE_EMAIL, SAMPLE_PASSWORD, SAMPLE_USERNAME);
         customerService.save(request);
 
         // when
@@ -64,12 +65,11 @@ class CustomerServiceTest {
     @Test
     public void changePassword() {
         // given
-        final CustomerRequest request =
-                new CustomerRequest("email@email.com", "password1!", "azpi");
+        final CustomerRequest request = new CustomerRequest(SAMPLE_EMAIL, SAMPLE_PASSWORD, SAMPLE_USERNAME);
         customerService.save(request);
 
         final ChangePasswordRequest changePasswordRequest =
-                new ChangePasswordRequest("password1!", "password2!");
+                new ChangePasswordRequest(SAMPLE_PASSWORD, "password2!");
 
         // when & then
         assertDoesNotThrow(() -> customerService.changePassword(request.getEmail(), changePasswordRequest));
@@ -79,12 +79,11 @@ class CustomerServiceTest {
     @Test
     public void failChangePassword() {
         // given
-        final CustomerRequest request =
-                new CustomerRequest("email@email.com", "password1!", "azpi");
+        final CustomerRequest request = new CustomerRequest(SAMPLE_EMAIL, SAMPLE_PASSWORD, SAMPLE_USERNAME);
         customerService.save(request);
 
         final ChangePasswordRequest changePasswordRequest =
-                new ChangePasswordRequest("password1!!", "password2!");
+                new ChangePasswordRequest("incorrect1!", "password2!");
 
         // when & then
         assertThatThrownBy(() -> customerService.changePassword(request.getEmail(), changePasswordRequest))
@@ -95,25 +94,23 @@ class CustomerServiceTest {
     @Test
     public void updateCustomer() {
         // given
-        final CustomerRequest request =
-                new CustomerRequest("email@email.com", "password1!", "azpi");
+        final CustomerRequest request = new CustomerRequest(SAMPLE_EMAIL, SAMPLE_PASSWORD, SAMPLE_USERNAME);
         customerService.save(request);
 
         // when
-        final CustomerResponse response = customerService.update(request.getEmail(), "dwoo");
+        final CustomerResponse response = customerService.update(request.getEmail(), "updateName");
 
         // then
         assertThat(response)
                 .extracting("email", "username")
-                .containsExactly("email@email.com", "dwoo");
+                .containsExactly(SAMPLE_EMAIL, "updateName");
     }
 
     @DisplayName("비밀번호가 일치하면 회원정보를 삭제할 수 있다.")
     @Test
     public void delete() {
         // given
-        final CustomerRequest request =
-                new CustomerRequest("email@email.com", "password1!", "azpi");
+        final CustomerRequest request = new CustomerRequest(SAMPLE_EMAIL, SAMPLE_PASSWORD, SAMPLE_USERNAME);
         customerService.save(request);
 
         // when
