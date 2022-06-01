@@ -48,7 +48,7 @@ public class CustomerDaoTest {
         final Long customerId = customerDao.findIdByUserName(userName);
 
         // then
-        assertThat(customerId).isEqualTo(16L);
+        assertThat(customerId).isEqualTo(2L);
     }
 
     @DisplayName("id 값을 통해서 Customer 를 조회할 수 있다.")
