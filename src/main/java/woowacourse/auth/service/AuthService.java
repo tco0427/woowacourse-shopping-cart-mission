@@ -10,7 +10,7 @@ import woowacourse.auth.exception.InvalidTokenException;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.exception.InvalidPasswordException;
 
 @Service
 @Transactional
@@ -27,7 +27,7 @@ public class AuthService {
     public TokenResponse createToken(TokenRequest request) {
         try {
             checkCustomer(request);
-        } catch (EmptyResultDataAccessException | InvalidCustomerException e) {
+        } catch (EmptyResultDataAccessException | InvalidPasswordException e) {
             throw new InvalidLoginException("Login Fail");
         }
 
@@ -37,7 +37,7 @@ public class AuthService {
 
     private void checkCustomer(TokenRequest request) {
         final Customer customer = customerDao.findByEmail(request.getEmail());
-        customer.checkPassword(request.getPassword());
+        customer.checkCorrectPassword(request.getPassword());
     }
 
     public String findCustomerByToken(String token) {

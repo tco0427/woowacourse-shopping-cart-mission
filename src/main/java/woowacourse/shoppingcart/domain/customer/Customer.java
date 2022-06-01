@@ -22,8 +22,8 @@ public class Customer {
         this.username = Username.from(username);
     }
 
-    public void checkPassword(String password) {
-        this.password.checkPassword(password);
+    public void checkCorrectPassword(String targetPassword) {
+        password.checkSamePassword(targetPassword);
     }
 
     public Long getId() {

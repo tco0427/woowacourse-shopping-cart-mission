@@ -16,9 +16,10 @@ import woowacourse.auth.exception.InvalidLoginException;
 import woowacourse.auth.exception.InvalidTokenException;
 import woowacourse.shoppingcart.dto.ErrorResponse;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.exception.InvalidPasswordException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
+import woowacourse.shoppingcart.exception.NotExistException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
 @RestControllerAdvice
@@ -39,12 +40,6 @@ public class ControllerAdvice {
         return ResponseEntity.badRequest().body(ErrorResponse.from(getMessage(e)));
     }
 
-    private String getMessage(MethodArgumentNotValidException e) {
-        return e.getFieldErrors().stream()
-                .map(FieldError::getDefaultMessage)
-                .collect(Collectors.joining(" "));
-    }
-
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> handle(InvalidTokenException e) {
         return ResponseEntity.status(UNAUTHORIZED).body(ErrorResponse.INVALID_TOKEN);
@@ -56,13 +51,18 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler
-    public ResponseEntity<ErrorResponse> handle(InvalidCustomerException e) {
+    public ResponseEntity<ErrorResponse> handle(InvalidPasswordException e) {
         return ResponseEntity.status(UNAUTHORIZED).body(ErrorResponse.INCORRECT_PASSWORD);
     }
 
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> handle(IllegalArgumentException e) {
         return ResponseEntity.badRequest().body(ErrorResponse.from(e.getMessage()));
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<String> handle(NotExistException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
     }
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
@@ -86,5 +86,11 @@ public class ControllerAdvice {
     })
     public ResponseEntity<String> handleInvalidAccess(final RuntimeException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+    private String getMessage(MethodArgumentNotValidException e) {
+        return e.getFieldErrors().stream()
+                .map(FieldError::getDefaultMessage)
+                .collect(Collectors.joining(" "));
     }
 }

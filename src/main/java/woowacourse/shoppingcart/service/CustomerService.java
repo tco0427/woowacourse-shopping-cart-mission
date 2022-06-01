@@ -7,7 +7,7 @@ import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.ChangePasswordRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
-import woowacourse.shoppingcart.exception.DeleteException;
+import woowacourse.shoppingcart.exception.NotExistException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -22,8 +22,7 @@ public class CustomerService {
     }
 
     public void save(CustomerRequest customerRequest) {
-        final Customer customer = new Customer(customerRequest.getEmail(), customerRequest.getPassword(),
-                customerRequest.getUsername());
+        final Customer customer = customerFromRequest(customerRequest);
 
         customerDao.save(customer);
     }
@@ -37,7 +36,7 @@ public class CustomerService {
 
     public void changePassword(String email, ChangePasswordRequest request) {
         final Customer foundCustomer = customerDao.findByEmail(email);
-        foundCustomer.checkPassword(request.getOldPassword());
+        foundCustomer.checkCorrectPassword(request.getOldPassword());
 
         final Customer customer = new Customer(foundCustomer.getId(), email, request.getNewPassword(),
                 foundCustomer.getUsername());
@@ -59,12 +58,15 @@ public class CustomerService {
 
     public void delete(String email, String password) {
         final Customer customer = customerDao.findByEmail(email);
-        customer.checkPassword(password);
+        customer.checkCorrectPassword(password);
 
         final int deleteCount = customerDao.deleteById(customer.getId());
-
         if (deleteCount == DELETE_FAIL) {
-           throw new DeleteException("고객 정보 삭제에 실패하였습니다.");
+           throw new NotExistException("고객 정보 삭제에 실패하였습니다.");
         }
+    }
+
+    private Customer customerFromRequest(CustomerRequest request) {
+        return new Customer(request.getEmail(), request.getPassword(), request.getUsername());
     }
 }

@@ -13,7 +13,7 @@ import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.dto.ChangePasswordRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.exception.InvalidPasswordException;
 
 @SpringBootTest
 @Sql("/truncate.sql")
@@ -88,7 +88,7 @@ class CustomerServiceTest {
 
         // when & then
         assertThatThrownBy(() -> customerService.changePassword(request.getEmail(), changePasswordRequest))
-                .isInstanceOf(InvalidCustomerException.class);
+                .isInstanceOf(InvalidPasswordException.class);
     }
 
     @DisplayName("email 을 기준으로 customer 정보를 업데이트할 수 있다.")
