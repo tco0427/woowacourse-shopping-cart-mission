@@ -38,7 +38,7 @@ public class Password {
 
     public void checkSamePassword(String password) {
         if (!this.password.equals(password)) {
-            throw new InvalidPasswordException("고객 정보가 일치하지 않습니다.");
+            throw new InvalidPasswordException("Incorrect Password");
         }
     }
 
