@@ -25,8 +25,8 @@ import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 @RestControllerAdvice
 public class ControllerAdvice {
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<String> handleUnhandledException() {
+    @ExceptionHandler
+    public ResponseEntity<String> handle(RuntimeException e) {
         return ResponseEntity.badRequest().body("Unhandled Exception");
     }
 
@@ -65,8 +65,8 @@ public class ControllerAdvice {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 
-    @ExceptionHandler(EmptyResultDataAccessException.class)
-    public ResponseEntity<String> handle() {
+    @ExceptionHandler
+    public ResponseEntity<String> handle(EmptyResultDataAccessException e) {
         return ResponseEntity.badRequest().body("존재하지 않는 데이터 요청입니다.");
     }
 
