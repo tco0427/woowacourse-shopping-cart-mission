@@ -42,7 +42,7 @@ public class CustomerDaoTest {
     @Test
     void findIdByUserNameTestIgnoreUpperLowerCase() {
         // given
-        final String userName = "gwangyeol-iM";
+        final String userName = "gwangyeol";
 
         // when
         final Long customerId = customerDao.findIdByUserName(userName);
