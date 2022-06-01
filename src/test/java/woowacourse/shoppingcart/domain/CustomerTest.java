@@ -1,10 +1,14 @@
 package woowacourse.shoppingcart.domain;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static woowacourse.CustomerFixture.SAMPLE_EMAIL;
+import static woowacourse.CustomerFixture.SAMPLE_USERNAME;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.exception.InvalidPasswordException;
 
 class CustomerTest {
 
@@ -13,5 +17,16 @@ class CustomerTest {
     void createCustomer() {
         assertDoesNotThrow(() -> new Customer("email@email.com", "password!2", "user"));
     }
-    
+
+    @DisplayName("customer 는 입력된 비밀번호와 기존 비밀번호와의 일치여부를 확인할 수 있다.")
+    @Test
+    public void checkCorrectPassword() {
+        // given
+        final Customer customer = new Customer(SAMPLE_EMAIL, "password1!", SAMPLE_USERNAME);
+
+        // when & then
+        assertThatThrownBy(() -> customer.checkCorrectPassword("incorrect1!"))
+                        .isInstanceOf(InvalidPasswordException.class);
+        assertDoesNotThrow(() -> customer.checkCorrectPassword(customer.getPassword()));
+    }
 }
