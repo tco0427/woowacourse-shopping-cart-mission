@@ -10,6 +10,7 @@ public class TokenRequest {
     @NotBlank(message = INVALID_EMAIL)
     @Email(message = INVALID_EMAIL, regexp = "^[a-zA-Z0-9+-\\_.]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$")
     private String email;
+
     private String password;
 
     public TokenRequest() {

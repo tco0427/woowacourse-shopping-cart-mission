@@ -23,10 +23,11 @@ import woowacourse.shoppingcart.dto.CustomerResponse;
 public class AuthAcceptanceTest extends AcceptanceTest {
 
     private static final String BEARER = "Bearer ";
+    private static final String INVALID_TOKEN_HEADER = "invalidTokenHeader";
     private static final int LOGIN_FAIL = 2001;
     private static final int INVALID_TOKEN = 3002;
 
-    @DisplayName("Bearer Auth 로그인 성공")
+    @DisplayName("이메일, 비밀번호, 닉네임으로 회원가입을 한 이후 동일한 이메일, 비밀번호로 로그인 시 로그인에 성공한다.")
     @Test
     void myInfoWithBearerAuth() {
         // given
@@ -51,7 +52,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .containsExactly(request.getEmail(), request.getUsername());
     }
 
-    @DisplayName("Bearer Auth 로그인 실패")
+    @DisplayName("회원가입시 입력한 비밀번호와 다른경우 혹은 가입되지 않은 회원인 경우 로그인에 실패한다.")
     @ParameterizedTest
     @CsvSource(value = {"email@email.com, password2!", "email2@email.com, password1!"})
     void myInfoWithBadBearerAuth(String email, String password) {
@@ -69,11 +70,11 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         assertThat(extractErrorCode(response)).isEqualTo(LOGIN_FAIL);
     }
 
-    @DisplayName("Bearer Auth 유효하지 않은 토큰")
+    @DisplayName("유효하지 않은 토큰으로 내 정보를 조회하려고 시도하면 실패한다.")
     @Test
     void myInfoWithWrongBearerAuth() {
         // when
-        final Header header = new Header("Authorization", "Bearer header");
+        final Header header = new Header("Authorization", BEARER + INVALID_TOKEN_HEADER);
         final ExtractableResponse<Response> response = AcceptanceFixture.get("/api/customers/me", header);
 
         // then
