@@ -24,6 +24,7 @@ public class AuthService {
         this.customerDao = customerDao;
     }
 
+    @Transactional(readOnly = true)
     public TokenResponse createToken(TokenRequest request) {
         try {
             checkCustomer(request);
