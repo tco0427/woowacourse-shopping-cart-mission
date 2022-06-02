@@ -51,7 +51,7 @@
 - ResponseBody
   ```json
   {
-    "accessToken" : "토큰"
+    "accessToken" : "Bearer XXXXX"
   }
   ```
 
