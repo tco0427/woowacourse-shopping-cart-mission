@@ -1,7 +1,6 @@
 package woowacourse.auth.config;
 
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
-import woowacourse.auth.controller.AuthenticationPrincipalArgumentResolver;
 import woowacourse.auth.service.AuthService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
