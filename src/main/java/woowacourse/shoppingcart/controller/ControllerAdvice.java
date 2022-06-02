@@ -5,7 +5,6 @@ import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 import java.util.stream.Collectors;
 import javax.validation.ConstraintViolationException;
 import org.springframework.dao.DuplicateKeyException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
@@ -16,8 +15,8 @@ import woowacourse.auth.exception.InvalidLoginException;
 import woowacourse.auth.exception.InvalidTokenException;
 import woowacourse.shoppingcart.dto.ErrorResponse;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
-import woowacourse.shoppingcart.exception.InvalidPasswordException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
+import woowacourse.shoppingcart.exception.InvalidPasswordException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotExistException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
@@ -62,11 +61,6 @@ public class ControllerAdvice {
 
     @ExceptionHandler
     public ResponseEntity<String> handle(NotExistException e) {
-        return ResponseEntity.badRequest().body("존재하지 않는 데이터 요청입니다.");
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<String> handle(EmptyResultDataAccessException e) {
         return ResponseEntity.badRequest().body("존재하지 않는 데이터 요청입니다.");
     }
 
