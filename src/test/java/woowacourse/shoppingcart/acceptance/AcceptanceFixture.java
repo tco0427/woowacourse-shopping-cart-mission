@@ -36,16 +36,6 @@ public class AcceptanceFixture {
                 .extract();
     }
 
-    public static <T> ExtractableResponse<Response> put(T params, String path) {
-        return RestAssured.given().log().all()
-                .body(params)
-                .contentType(APPLICATION_JSON_VALUE)
-                .when()
-                .put(path)
-                .then().log().all()
-                .extract();
-    }
-
     public static <T> ExtractableResponse<Response> patch(T params, String path, Header header) {
         return RestAssured.given().log().all()
                 .header(header)
