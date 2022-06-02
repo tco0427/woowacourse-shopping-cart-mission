@@ -56,7 +56,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("회원가입시 입력한 비밀번호와 다른경우 혹은 가입되지 않은 회원인 경우 로그인에 실패한다.")
     @ParameterizedTest
-    @CsvSource(value = {"email@email.com, password2!", "email2@email.com, password1!"})
+    @CsvSource(value = {"email@email.com, invalidpwd1!", "invalidEmail@email.com, password1!"})
     void myInfoWithBadBearerAuth(String email, String password) {
         // given
         final CustomerRequest request = new CustomerRequest(SAMPLE_EMAIL, SAMPLE_PASSWORD, SAMPLE_USERNAME);
