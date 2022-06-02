@@ -24,7 +24,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<TokenResponse> signIn(@Valid @RequestBody TokenRequest request) {
+    public ResponseEntity<TokenResponse> login(@Valid @RequestBody TokenRequest request) {
         final TokenResponse token = authService.createToken(request);
 
         return ResponseEntity.status(OK).location(URI.create("/")).body(token);
