@@ -13,7 +13,7 @@ public class ChangePasswordRequest {
     @Pattern(message = INVALID_PASSWORD, regexp = "^.*(?=^.{8,12}$)(?=.*\\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$")
     private String newPassword;
 
-    public ChangePasswordRequest() {
+    private ChangePasswordRequest() {
     }
 
     public ChangePasswordRequest(String oldPassword, String newPassword) {

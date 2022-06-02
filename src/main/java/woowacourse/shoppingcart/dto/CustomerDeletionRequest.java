@@ -11,7 +11,7 @@ public class CustomerDeletionRequest {
     @Pattern(message = INVALID_PASSWORD, regexp = "^.*(?=^.{8,12}$)(?=.*\\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$")
     private String password;
 
-    public CustomerDeletionRequest() {
+    private CustomerDeletionRequest() {
     }
 
     public CustomerDeletionRequest(String password) {

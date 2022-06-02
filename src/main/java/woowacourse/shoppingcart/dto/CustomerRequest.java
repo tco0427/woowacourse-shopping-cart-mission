@@ -23,7 +23,7 @@ public class CustomerRequest {
     @Size(message = INVALID_USERNAME, max = 10)
     private String username;
 
-    public CustomerRequest() {
+    private CustomerRequest() {
     }
 
     public CustomerRequest(String email, String password, String username) {
