@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static woowacourse.CustomerFixture.SAMPLE_CUSTOMER;
 
 import org.junit.jupiter.api.DisplayName;
@@ -55,7 +56,7 @@ public class CustomerDaoTest {
     @Test
     public void findById() {
         // given
-        Customer customer = SAMPLE_CUSTOMER;
+        final Customer customer = SAMPLE_CUSTOMER;
         final Long savedId = customerDao.save(customer);
 
         // when
@@ -71,7 +72,7 @@ public class CustomerDaoTest {
     @Test
     public void findByEmail() {
         // given
-        Customer customer = SAMPLE_CUSTOMER;
+        final Customer customer = SAMPLE_CUSTOMER;
         customerDao.save(customer);
 
         // when
@@ -87,7 +88,7 @@ public class CustomerDaoTest {
     @Test
     public void saveCustomer() {
         // given
-        Customer customer = SAMPLE_CUSTOMER;
+        final Customer customer = SAMPLE_CUSTOMER;
 
         // when
         final Long savedId = customerDao.save(customer);
@@ -103,7 +104,7 @@ public class CustomerDaoTest {
     @Test
     public void update() {
         // given
-        Customer customer = SAMPLE_CUSTOMER;
+        final Customer customer = SAMPLE_CUSTOMER;
         final Long savedId = customerDao.save(customer);
 
         // when
@@ -122,10 +123,9 @@ public class CustomerDaoTest {
     @Test
     public void deleteById() {
         // given
-        Customer customer = SAMPLE_CUSTOMER;
-        final Long savedId = customerDao.save(customer);
+        final Long savedId = customerDao.save(SAMPLE_CUSTOMER);
 
         // when & then
-        assertThat(customerDao.deleteById(savedId)).isEqualTo(1);
+        assertDoesNotThrow(() -> customerDao.deleteById(savedId));
     }
 }

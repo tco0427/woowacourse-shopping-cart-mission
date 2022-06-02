@@ -11,12 +11,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.dto.ChangePasswordRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.exception.InvalidPasswordException;
+import woowacourse.shoppingcart.exception.NotExistException;
 
 @SpringBootTest
 @Sql("/truncate.sql")
@@ -118,6 +118,6 @@ class CustomerServiceTest {
 
         // then
         assertThatThrownBy(() -> customerService.findByEmail(request.getEmail()))
-                .isInstanceOf(EmptyResultDataAccessException.class);
+                .isInstanceOf(NotExistException.class);
     }
 }

@@ -7,13 +7,10 @@ import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.ChangePasswordRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
-import woowacourse.shoppingcart.exception.NotExistException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class CustomerService {
-
-    private static final int DELETE_FAIL = 0;
 
     private final CustomerDao customerDao;
 
@@ -60,10 +57,7 @@ public class CustomerService {
         final Customer customer = customerDao.findByEmail(email);
         customer.checkCorrectPassword(password);
 
-        final int deleteCount = customerDao.deleteById(customer.getId());
-        if (deleteCount == DELETE_FAIL) {
-           throw new NotExistException("고객 정보 삭제에 실패하였습니다.");
-        }
+        customerDao.deleteById(customer.getId());
     }
 
     private Customer customerFromRequest(CustomerRequest request) {

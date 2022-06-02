@@ -11,7 +11,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.customer.Customer;
-import woowacourse.shoppingcart.exception.InvalidPasswordException;
+import woowacourse.shoppingcart.exception.NotExistException;
 
 @Repository
 public class CustomerDao {
@@ -36,13 +36,21 @@ public class CustomerDao {
     public Customer findById(final Long id) {
         final String query = "SELECT * FROM customer WHERE id = :id";
 
-        return jdbcTemplate.queryForObject(query, Map.of("id", id), CUSTOMER_ROW_MAPPER);
+        try {
+            return jdbcTemplate.queryForObject(query, Map.of("id", id), CUSTOMER_ROW_MAPPER);
+        } catch(EmptyResultDataAccessException e) {
+            throw new NotExistException();
+        }
     }
 
     public Customer findByEmail(final String email) {
         final String query = "SELECT * FROM customer WHERE email = :email";
 
-        return jdbcTemplate.queryForObject(query, Map.of("email", email), CUSTOMER_ROW_MAPPER);
+        try {
+            return jdbcTemplate.queryForObject(query, Map.of("email", email), CUSTOMER_ROW_MAPPER);
+        } catch(EmptyResultDataAccessException e) {
+            throw new NotExistException();
+        }
     }
 
     public Long findIdByUserName(final String userName) {
@@ -50,7 +58,7 @@ public class CustomerDao {
             final String query = "SELECT id FROM customer WHERE username = :username";
             return jdbcTemplate.queryForObject(query, Map.of("username", userName.toLowerCase(ROOT)), Long.class);
         } catch (final EmptyResultDataAccessException e) {
-            throw new InvalidPasswordException();
+            throw new NotExistException();
         }
     }
 
@@ -74,8 +82,8 @@ public class CustomerDao {
         jdbcTemplate.update(query, parameterSource);
     }
 
-    public int deleteById(final Long id) {
+    public void deleteById(final Long id) {
         final String query = "DELETE FROM customer WHERE id = :id";
-        return jdbcTemplate.update(query, Map.of("id", id));
+        jdbcTemplate.update(query, Map.of("id", id));
     }
 }
