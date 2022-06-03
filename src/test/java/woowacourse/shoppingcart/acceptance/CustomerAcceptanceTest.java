@@ -32,7 +32,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     private static final int DUPLICATE_EMAIL = 1001;
     private static final int INCORRECT_PASSWORD = 3001;
 
-    @DisplayName("email, password, username 을 통해서 회원가입을 할 수 있다.")
+    @DisplayName("email, password, username을 가지고 회원가입을 요청하면 해당 정보로 고객 정보를 생성한다.")
     @Test
     void addCustomer() {
         // given
@@ -46,7 +46,30 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         assertThat(response.header("Location")).isNotBlank().isEqualTo("/login");
     }
 
-    @DisplayName("내 정보 조회")
+    @DisplayName("회원가입 이후에 회원가입시에 사용한 email과 password로 로그인할 수 있다.")
+    @Test
+    void login() {
+        // given
+        final CustomerRequest request = new CustomerRequest(SAMPLE_EMAIL, SAMPLE_PASSWORD, SAMPLE_USERNAME);
+        AcceptanceFixture.post(request, "/api/customers");
+
+        // when
+        final TokenRequest tokenRequest = new TokenRequest(SAMPLE_EMAIL, SAMPLE_PASSWORD);
+        final ExtractableResponse<Response> loginResponse =
+                AcceptanceFixture.post(tokenRequest, "/api/auth/login");
+
+        // then
+        assertThat(loginResponse.statusCode()).isEqualTo(OK.value());
+
+        final String accessToken = extractAccessToken(loginResponse);
+        final ExtractableResponse<Response> response =
+                AcceptanceFixture.get("/api/customers/me", createHeader(accessToken));
+        final CustomerResponse customerResponse = extractCustomer(response);
+        assertThat(customerResponse).extracting("email", "username")
+                .contains(SAMPLE_EMAIL, SAMPLE_USERNAME);
+    }
+
+    @DisplayName("로그인 한 이후에 내 정보(email, username)을 조회할 수 있다.")
     @Test
     void getMe() {
         // given
@@ -59,7 +82,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         final String accessToken = extractAccessToken(loginResponse);
 
         // when
-        Header header = new Header("Authorization", BEARER + accessToken);
+        Header header = createHeader(accessToken);
         final ExtractableResponse<Response> response = AcceptanceFixture.get("/api/customers/me", header);
 
         final CustomerResponse customerResponse = extractCustomer(response);
@@ -71,7 +94,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .containsExactly(request.getEmail(), request.getUsername());
     }
 
-    @DisplayName("내 정보 수정")
+    @DisplayName("회원가입을 하고, 로그인을 해서 인증을 하고 나면 내 정보(username)을 수정할 수 있다.")
     @Test
     void updateMe() {
         // given
@@ -85,7 +108,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         // when
         final CustomerUpdateRequest updateRequest = new CustomerUpdateRequest("dwoo");
-        Header header = new Header("Authorization", BEARER + accessToken);
+        Header header = createHeader(accessToken);
         final ExtractableResponse<Response> response =
                 AcceptanceFixture.patch(updateRequest,"/api/customers/me?target=generalInfo", header);
 
@@ -98,7 +121,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .containsExactly(request.getEmail(), updateRequest.getUsername());
     }
 
-    @DisplayName("내 비밀번호 변경")
+    @DisplayName("회원가입을 하고, 로그인을 해서 인증을 하고 나면 현재 비밀번호와 새 비밀번호를 입력하여 비밀번호 변경을 할 수 있다.")
     @Test
     void changePassword() {
         // given
@@ -113,7 +136,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // when
         final ChangePasswordRequest changePasswordRequest =
                 new ChangePasswordRequest(request.getPassword(), "newpwd1!");
-        Header header = new Header("Authorization", BEARER + accessToken);
+        Header header = createHeader(accessToken);
         final ExtractableResponse<Response> response =
                 AcceptanceFixture.patch(changePasswordRequest,"/api/customers/me?target=password", header);
 
@@ -122,7 +145,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         assertThat(response.header("Location")).isNotBlank().isEqualTo("/login");
     }
 
-    @DisplayName("회원탈퇴")
+    @DisplayName("로그인을 한 이후에 현재 비밀번호와 함께 탈퇴 요청을 하면 탈퇴를 할 수 있다.")
     @Test
     void deleteMe() {
         // given
@@ -137,7 +160,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // when
         final CustomerDeletionRequest customerDeletionRequest =
                 new CustomerDeletionRequest(request.getPassword());
-        Header header = new Header("Authorization", BEARER + accessToken);
+        Header header = createHeader(accessToken);
         final ExtractableResponse<Response> response =
                 AcceptanceFixture.delete(customerDeletionRequest,"/api/customers/me", header);
 
@@ -194,7 +217,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // when
         final ChangePasswordRequest changePasswordRequest =
                 new ChangePasswordRequest("incorrect1!", "newpwd1!");
-        Header header = new Header("Authorization", BEARER + accessToken);
+        Header header = createHeader(accessToken);
         final ExtractableResponse<Response> response =
                 AcceptanceFixture.patch(changePasswordRequest,"/api/customers/me?target=password", header);
 
@@ -216,5 +239,9 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
     private int extractErrorCode(ExtractableResponse<Response> response) {
         return response.jsonPath().getInt("errorCode");
+    }
+
+    private Header createHeader(String accessToken) {
+        return new Header("Authorization", BEARER + accessToken);
     }
 }
