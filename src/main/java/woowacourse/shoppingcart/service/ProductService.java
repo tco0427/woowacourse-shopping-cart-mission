@@ -17,7 +17,7 @@ public class ProductService {
     }
 
     public List<Product> findProducts() {
-        return productDao.findProducts();
+        return productDao.findAll();
     }
 
     public Long addProduct(final Product product) {
@@ -25,10 +25,10 @@ public class ProductService {
     }
 
     public Product findProductById(final Long productId) {
-        return productDao.findProductById(productId);
+        return productDao.findById(productId);
     }
 
     public void deleteProductById(final Long productId) {
-        productDao.delete(productId);
+        productDao.deleteById(productId);
     }
 }

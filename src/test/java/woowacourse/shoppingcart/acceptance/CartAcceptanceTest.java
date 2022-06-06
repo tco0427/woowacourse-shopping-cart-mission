@@ -16,9 +16,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.Image;
 
 @DisplayName("장바구니 관련 기능")
 public class CartAcceptanceTest extends AcceptanceTest {
+
+    private static final Image CHICKEN_IMAGE = new Image("http://example.com/chicken.jpg", "chicken");
+    private static final Image BEER_IMAGE = new Image("http://example.com/beer.jpg", "beer");
+
     private static final String USER = "puterism";
     private Long productId1;
     private Long productId2;
@@ -28,8 +33,8 @@ public class CartAcceptanceTest extends AcceptanceTest {
     public void setUp() {
         super.setUp();
 
-        productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
-        productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
+        productId1 = 상품_등록되어_있음("치킨", 10_000, 1_000, CHICKEN_IMAGE);
+        productId2 = 상품_등록되어_있음("맥주", 20_000, 1_000, BEER_IMAGE);
     }
 
     @DisplayName("장바구니 아이템 추가")

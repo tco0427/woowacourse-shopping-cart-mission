@@ -1,69 +1,92 @@
 package woowacourse.shoppingcart.dao;
 
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.stereotype.Repository;
-import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.exception.InvalidProductException;
-
-import java.sql.PreparedStatement;
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.stereotype.Repository;
+import woowacourse.shoppingcart.domain.Image;
+import woowacourse.shoppingcart.domain.Product;
 
 @Repository
 public class ProductDao {
 
-    private final JdbcTemplate jdbcTemplate;
+    private static final RowMapper<Product> PRODUCT_ROW_MAPPER = createProductRowMapper();
 
-    public ProductDao(final JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert productInsert;
+    private final SimpleJdbcInsert imageInsert;
+
+    public ProductDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
+        this.productInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("product")
+                .usingGeneratedKeyColumns("id");
+        this.imageInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("image")
+                .usingGeneratedKeyColumns("id");
     }
 
-    public Long save(final Product product) {
-        final String query = "INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)";
-        final GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            final PreparedStatement preparedStatement =
-                    connection.prepareStatement(query, new String[]{"id"});
-            preparedStatement.setString(1, product.getName());
-            preparedStatement.setInt(2, product.getPrice());
-            preparedStatement.setString(3, product.getImageUrl());
-            return preparedStatement;
-        }, keyHolder);
+    public Long save(Product product) {
+        Long imageId = saveImage(product.getImage());
 
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+        final MapSqlParameterSource parameterSource = new MapSqlParameterSource();
+        parameterSource.addValue("name", product.getName());
+        parameterSource.addValue("price", product.getPrice());
+        parameterSource.addValue("stock_quantity", product.getStockQuantity());
+        parameterSource.addValue("image_id", imageId);
+
+        return productInsert.executeAndReturnKey(parameterSource).longValue();
     }
 
-    public Product findProductById(final Long productId) {
-        try {
-            final String query = "SELECT name, price, image_url FROM product WHERE id = ?";
-            return jdbcTemplate.queryForObject(query, (resultSet, rowNumber) ->
-                    new Product(
-                            productId,
-                            resultSet.getString("name"), resultSet.getInt("price"),
-                            resultSet.getString("image_url")
-                    ), productId
-            );
-        } catch (EmptyResultDataAccessException e) {
-            throw new InvalidProductException();
-        }
+    private Long saveImage(Image image) {
+        final MapSqlParameterSource parameterSource = new MapSqlParameterSource();
+        parameterSource.addValue("image_url", image.getUrl());
+        parameterSource.addValue("image_alt", image.getAlteration());
+
+        return imageInsert.executeAndReturnKey(parameterSource).longValue();
     }
 
-    public List<Product> findProducts() {
-        final String query = "SELECT id, name, price, image_url FROM product";
-        return jdbcTemplate.query(query,
-                (resultSet, rowNumber) ->
-                        new Product(
-                                resultSet.getLong("id"),
-                                resultSet.getString("name"),
-                                resultSet.getInt("price"),
-                                resultSet.getString("image_url")
-                        ));
+    public Product findById(Long id) {
+        final String query = "SELECT product.id, `name`, price, stock_quantity, "
+                + "image.image_url as url, image.image_alt as alt "
+                + "FROM product "
+                + "JOIN image on image.id = image_id "
+                + "WHERE product.id = :id";
+
+        return jdbcTemplate.queryForObject(query, Map.of("id", id), PRODUCT_ROW_MAPPER);
     }
 
-    public void delete(final Long productId) {
-        final String query = "DELETE FROM product WHERE id = ?";
-        jdbcTemplate.update(query, productId);
+    public List<Product> findAll() {
+        final String query = "SELECT product.id, `name`, price, stock_quantity, "
+                + "image.image_url as url, image.image_alt as alt "
+                + "FROM product "
+                + "JOIN image on image.id = image_id";
+
+        return jdbcTemplate.query(query, PRODUCT_ROW_MAPPER);
+    }
+
+    public void deleteById(Long id) {
+        final String query = "DELETE FROM product WHERE id = :id";
+
+        jdbcTemplate.update(query, Map.of("id", id));
+    }
+
+    private static RowMapper<Product> createProductRowMapper() {
+        return (resultSet, rowNum) -> {
+            final long id = resultSet.getLong("id");
+            final String name = resultSet.getString("name");
+            final int price = resultSet.getInt("price");
+            final int stockQuantity = resultSet.getInt("stock_quantity");
+
+            final String url = resultSet.getString("url");
+            final String alt = resultSet.getString("alt");
+            final Image image = new Image(url, alt);
+
+            return new Product(id, name, price, stockQuantity, image);
+        };
     }
 }

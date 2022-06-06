@@ -33,8 +33,8 @@ public class CartService {
         final List<Cart> carts = new ArrayList<>();
         for (final Long cartId : cartIds) {
             final Long productId = cartItemDao.findProductIdById(cartId);
-            final Product product = productDao.findProductById(productId);
-            carts.add(new Cart(cartId, product));
+            final Product product = productDao.findById(productId);
+            carts.add(new Cart(cartId, product, 100));
         }
         return carts;
     }
