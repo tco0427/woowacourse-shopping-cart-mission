@@ -1,6 +1,19 @@
 package woowacourse.shoppingcart.controller;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,26 +23,21 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import woowacourse.shoppingcart.domain.OrderDetail;
-import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.domain.Orders;
+import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.Image;
+import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.service.OrderService;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 public class OrderControllerTest {
 
+    private static final Image SAMPLE_IMAGE = new Image("image_url", "image_alt");
+    private static final Product SAMPLE_PRODUCT =
+            new Product(2L, "banana", 1_000, 3, SAMPLE_IMAGE);
+    private static final Product SAMPLE_ANOTHER_PRODUCT =
+            new Product(3L, "apple", 2_000, 5, SAMPLE_IMAGE);
     @Autowired
     private MockMvc mockMvc;
 
@@ -75,7 +83,7 @@ public class OrderControllerTest {
         final String customerName = "pobi";
         final Long orderId = 1L;
         final Orders expected = new Orders(orderId,
-                Collections.singletonList(new OrderDetail(2L, 1_000, "banana", "imageUrl", 2)));
+                Collections.singletonList(new OrderDetail(2L, SAMPLE_PRODUCT, 2)));
 
         when(orderService.findOrderById(customerName, orderId))
                 .thenReturn(expected);
@@ -99,9 +107,9 @@ public class OrderControllerTest {
         final String customerName = "pobi";
         final List<Orders> expected = Arrays.asList(
                 new Orders(1L, Collections.singletonList(
-                        new OrderDetail(1L, 1_000, "banana", "imageUrl", 2))),
+                        new OrderDetail(1L, SAMPLE_PRODUCT, 2))),
                 new Orders(2L, Collections.singletonList(
-                        new OrderDetail(2L, 2_000, "apple", "imageUrl2", 4)))
+                        new OrderDetail(2L, SAMPLE_ANOTHER_PRODUCT, 4)))
         );
 
         when(orderService.findOrdersByCustomerName(customerName))

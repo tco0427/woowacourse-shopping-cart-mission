@@ -1,14 +1,17 @@
 package woowacourse.shoppingcart.domain;
 
 import java.util.List;
+import woowacourse.shoppingcart.domain.customer.Customer;
 
 public class Orders {
 
     private final Long id;
+    private final Customer customer;
     private final List<OrderDetail> orderDetails;
 
-    public Orders(final Long id, final List<OrderDetail> orderDetails) {
+    public Orders(Long id, Customer customer, List<OrderDetail> orderDetails) {
         this.id = id;
+        this.customer = customer;
         this.orderDetails = orderDetails;
     }
 
@@ -16,7 +19,11 @@ public class Orders {
         return id;
     }
 
+    public Customer getCustomer() {
+        return customer;
+    }
+
     public List<OrderDetail> getOrderDetails() {
-        return orderDetails;
+        return List.copyOf(orderDetails);
     }
 }
