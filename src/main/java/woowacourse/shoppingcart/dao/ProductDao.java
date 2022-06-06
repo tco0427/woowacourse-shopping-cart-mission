@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.dao;
 
 import java.util.List;
 import java.util.Map;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -10,6 +11,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Image;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.exception.NotExistException;
 
 @Repository
 public class ProductDao {
@@ -57,7 +59,11 @@ public class ProductDao {
                 + "JOIN image on image.id = image_id "
                 + "WHERE product.id = :id";
 
-        return jdbcTemplate.queryForObject(query, Map.of("id", id), PRODUCT_ROW_MAPPER);
+        try {
+            return jdbcTemplate.queryForObject(query, Map.of("id", id), PRODUCT_ROW_MAPPER);
+        } catch(EmptyResultDataAccessException e) {
+            throw new NotExistException();
+        }
     }
 
     public List<Product> findAll() {
