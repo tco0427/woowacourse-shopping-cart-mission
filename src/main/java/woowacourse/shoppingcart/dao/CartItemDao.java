@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.dao;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Image;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.exception.NotExistException;
 
 @Repository
 public class CartItemDao {
@@ -27,6 +29,22 @@ public class CartItemDao {
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("cart_item")
                 .usingGeneratedKeyColumns("id");
+    }
+
+    public Cart findById(Long id) {
+        final String query = "SELECT cart_item.id as id, product.id as product_id, "
+                + "product.name as name, product.price as price, product.stock_quantity, "
+                + "image.image_url as url, image.image_alt as alt, cart_item.quantity as quantity "
+                + "FROM cart_item "
+                + "JOIN product ON cart_item.product_id = product.id "
+                + "JOIN image ON image.id = product.image_id "
+                + "WHERE cart_item.id = :id";
+
+        try {
+            return jdbcTemplate.queryForObject(query, Map.of("id", id), CART_ITEM_ROW_MAPPER);
+        } catch(EmptyResultDataAccessException e) {
+            throw new NotExistException();
+        }
     }
 
     public List<Cart> findCartsByCustomerId(Long id) {
@@ -50,17 +68,17 @@ public class CartItemDao {
         return simpleJdbcInsert.executeAndReturnKey(parameterSource).longValue();
     }
 
-    public void updateCartQuantity(Cart cart, int quantity) {
+    public void updateCartQuantity(Long cartItemId, int quantity) {
         final String query = "UPDATE cart_item SET quantity = :quantity WHERE id = :id";
 
         MapSqlParameterSource parameterSource = new MapSqlParameterSource();
         parameterSource.addValue("quantity", quantity);
-        parameterSource.addValue("id", cart.getId());
+        parameterSource.addValue("id", cartItemId);
 
         jdbcTemplate.update(query, parameterSource);
     }
 
-    public void deleteCartItem(final List<Long> cartItemIds) {
+    public void deleteCartItem(List<Long> cartItemIds) {
         final String sql = "DELETE FROM cart_item WHERE id = :id";
 
         SqlParameterSource[] parameters = getParameters(cartItemIds);

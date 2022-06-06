@@ -58,10 +58,22 @@ public class CartItemDaoTest {
         assertThat(cartId).isEqualTo(3L);
     }
 
+    @DisplayName("장바구니에 담긴 cart item의 id로 특정 장바구니에 담긴 상품을 조회한다.")
+    @Test
+    public void findById() {
+        // when
+        final Cart foundCart = cartItemDao.findById(1L);
+
+        // then
+        assertThat(foundCart)
+                .extracting("id", "product", "quantity")
+                .contains(foundCart.getId(), foundCart.getProduct(), foundCart.getQuantity());
+    }
+
     @DisplayName("고객 정보(id)를 넣으면, 해당 고객이 장바구니에 담은 상품의 id목록을 가져온다.")
     @Test
     void findProductIdsByCustomerId() {
-        // given & when
+        // when
         final List<Cart> carts = cartItemDao.findCartsByCustomerId(CUSTOMER_ID);
 
         // then
@@ -72,7 +84,7 @@ public class CartItemDaoTest {
     @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
     @Test
     void findIdsByCustomerId() {
-        // given & when
+        // when
         final List<Cart> carts = cartItemDao.findCartsByCustomerId(CUSTOMER_ID);
 
         // then
@@ -80,7 +92,7 @@ public class CartItemDaoTest {
         assertThat(cartIds).containsExactly(1L, 2L);
     }
 
-    @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
+    @DisplayName("장바구니 아이템 id 목록을 통해서 장바구니에서 제거할 수 있다.")
     @Test
     void deleteCartItem() {
         // given

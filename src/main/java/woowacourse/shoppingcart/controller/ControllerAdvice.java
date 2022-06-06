@@ -55,6 +55,11 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handle(InvalidCartItemException e) {
+        return ResponseEntity.badRequest().body(ErrorResponse.INVALID_CARTITEM);
+    }
+
+    @ExceptionHandler
     public ResponseEntity<ErrorResponse> handle(IllegalArgumentException e) {
         return ResponseEntity.badRequest().body(ErrorResponse.from(e.getMessage()));
     }
@@ -73,7 +78,6 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler({
-            InvalidCartItemException.class,
             InvalidProductException.class,
             InvalidOrderException.class,
             NotInCustomerCartItemException.class,

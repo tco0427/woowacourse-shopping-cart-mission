@@ -25,7 +25,7 @@ public class CartItemController {
 
     @GetMapping
     public ResponseEntity<List<Cart>> getCartItems(@PathVariable final String customerName) {
-        return ResponseEntity.ok().body(cartService.findCartsByCustomerName(customerName));
+        return ResponseEntity.ok().body(cartService.findCartsByCustomer(customerName));
     }
 
     @PostMapping
@@ -41,9 +41,8 @@ public class CartItemController {
     }
 
     @DeleteMapping("/{cartId}")
-    public ResponseEntity<Void> deleteCartItem(@PathVariable final String customerName,
-                                         @PathVariable final Long cartId) {
-        cartService.deleteCart(customerName, cartId);
+    public ResponseEntity<Void> deleteCartItem(@AuthenticationPrincipal String email, List<Long> cartItemIds) {
+        cartService.deleteCart(email, cartItemIds);
         return ResponseEntity.noContent().build();
     }
 }
