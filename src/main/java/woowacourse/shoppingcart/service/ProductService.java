@@ -1,11 +1,17 @@
 package woowacourse.shoppingcart.service;
 
+import static java.util.stream.Collectors.toList;
+
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.ProductDao;
+import woowacourse.shoppingcart.domain.Image;
 import woowacourse.shoppingcart.domain.Product;
-
-import java.util.List;
+import woowacourse.shoppingcart.dto.ProductRequest;
+import woowacourse.shoppingcart.dto.ProductResponse;
+import woowacourse.shoppingcart.dto.ProductResponses;
+import woowacourse.shoppingcart.dto.ThumbnailImage;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -17,17 +23,34 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<Product> findAll() {
-        return productDao.findAll();
+    public ProductResponses findAll() {
+        final List<Product> products = productDao.findAll();
+
+        final List<ProductResponse> productResponses = products.stream()
+                .map(ProductResponse::new)
+                .collect(toList());
+
+        return new ProductResponses(productResponses);
     }
 
-    public Long save(final Product product) {
-        return productDao.save(product);
+    public ProductResponse save(ProductRequest request) {
+        Image image = makeImage(request.getThumbnailImage());
+        final Product product = new Product(request.getName(), request.getPrice(), request.getStockQuantity(), image);
+
+        final Long savedId = productDao.save(product);
+
+        return new ProductResponse(savedId, product);
+    }
+
+    private Image makeImage(ThumbnailImage thumbnailImage) {
+        return new Image(thumbnailImage.getUrl(), thumbnailImage.getAlt());
     }
 
     @Transactional(readOnly = true)
-    public Product findById(final Long productId) {
-        return productDao.findById(productId);
+    public ProductResponse findById(final Long productId) {
+        final Product product = productDao.findById(productId);
+
+        return new ProductResponse(product);
     }
 
     public void deleteById(final Long productId) {

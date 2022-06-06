@@ -12,25 +12,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Cart;
-import woowacourse.shoppingcart.domain.Image;
-import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.CustomerRequest;
+import woowacourse.shoppingcart.dto.ProductRequest;
+import woowacourse.shoppingcart.dto.ThumbnailImage;
 import woowacourse.shoppingcart.exception.NotExistException;
 
 @SpringBootTest
 @Sql("/truncate.sql")
 class CartServiceTest {
 
-    private static final Image SAMPLE_IMAGE = new Image("sampleUrl", "sampleAlt");
-    private static final Image CHOCOLATE_IMAGE = new Image("chocolateImageUrl", "chocolateImageAlt");
-    private static final Image SNACK_IMAGE = new Image("snackImageUrl", "snackImageAlt");
-    private static final Product CHOCOLATE_PRODUCT =
-            new Product("chocolate", 1_000, 100, CHOCOLATE_IMAGE);
-    private static final Product SAMPLE_PRODUCT =
-            new Product("sample", 10_000, 10, SAMPLE_IMAGE);
-    private static final Product SNACK_PRODUCT =
-            new Product("snack", 1_000, 100, SNACK_IMAGE);
     private static final String SAMPLE_EMAIL = "email@email.com";
+
+    private static final ThumbnailImage CHOCOLATE_IMAGE =
+            new ThumbnailImage("chocolateImageUrl", "chocolateImageAlt");
+    private static final ThumbnailImage SNACK_IMAGE = new ThumbnailImage("snackImageUrl", "snackImageAlt");
+    private static final ThumbnailImage SAMPLE_IMAGE = new ThumbnailImage("sampleUrl", "sampleAlt");
+
+    private static final ProductRequest CHOCOLATE_PRODUCT_REQUEST =
+            new ProductRequest("chocolate", 1_000, 100, CHOCOLATE_IMAGE);
+    private static final ProductRequest SAMPLE_PRODUCT_REQUEST =
+            new ProductRequest("sample", 10_000, 10, SAMPLE_IMAGE);
+    private static final ProductRequest SNACK_PRODUCT_REQUEST =
+            new ProductRequest("snack", 1_000, 100, SNACK_IMAGE);
 
     private final CartService cartService;
     private final CustomerService customerService;
@@ -53,7 +56,7 @@ class CartServiceTest {
     @Test
     public void findById() {
         // given
-        final Long savedProductId = productService.save(SAMPLE_PRODUCT);
+        final Long savedProductId = productService.save(SAMPLE_PRODUCT_REQUEST).getId();
         final Long savedId = cartService.addCart(SAMPLE_EMAIL, savedProductId, 5);
 
         // when
@@ -68,8 +71,8 @@ class CartServiceTest {
     @Test
     public void findCartsByCustomer() {
         // given
-        final Long chocolateId = productService.save(CHOCOLATE_PRODUCT);
-        final Long snackId = productService.save(SNACK_PRODUCT);
+        final Long chocolateId = productService.save(CHOCOLATE_PRODUCT_REQUEST).getId();
+        final Long snackId = productService.save(SNACK_PRODUCT_REQUEST).getId();
 
         final Long chocolateCartId = cartService.addCart(SAMPLE_EMAIL, chocolateId, 2);
         final Long snackCartId = cartService.addCart(SAMPLE_EMAIL, snackId, 2);
@@ -88,7 +91,7 @@ class CartServiceTest {
     @Test
     public void addCart() {
         // given
-        final Long savedProductId = productService.save(SAMPLE_PRODUCT);
+        final Long savedProductId = productService.save(SAMPLE_PRODUCT_REQUEST).getId();
 
         // when
         final Long savedId = cartService.addCart(SAMPLE_EMAIL, savedProductId, 5);
@@ -103,7 +106,7 @@ class CartServiceTest {
     @Test
     public void updateQuantity() {
         // given
-        final Long savedProductId = productService.save(SAMPLE_PRODUCT);
+        final Long savedProductId = productService.save(SAMPLE_PRODUCT_REQUEST).getId();
         final Long savedId = cartService.addCart(SAMPLE_EMAIL, savedProductId, 5);
 
         // when
@@ -118,7 +121,7 @@ class CartServiceTest {
     @Test
     public void deleteCart() {
         // given
-        final Long savedProductId = productService.save(SAMPLE_PRODUCT);
+        final Long savedProductId = productService.save(SAMPLE_PRODUCT_REQUEST).getId();
         final Long savedId = cartService.addCart(SAMPLE_EMAIL, savedProductId, 5);
 
         // when
