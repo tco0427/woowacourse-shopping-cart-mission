@@ -15,6 +15,10 @@ public class Customer {
         this(null, email, password, username);
     }
 
+    public Customer(Long id, String email, String username) {
+        this(id, email, null, username);
+    }
+
     public Customer(Long id, String email, String password, String username) {
         this.id = id;
         this.email = Email.from(email);

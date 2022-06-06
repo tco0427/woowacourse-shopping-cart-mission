@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.dao;
 
+import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
@@ -12,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Image;
 import woowacourse.shoppingcart.domain.Product;
 
@@ -20,6 +22,8 @@ import woowacourse.shoppingcart.domain.Product;
 @Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 public class CartItemDaoTest {
+
+    private static final Long CUSTOMER_ID = 1L;
 
     private final CartItemDao cartItemDao;
     private final ProductDao productDao;
@@ -36,67 +40,64 @@ public class CartItemDaoTest {
         productDao.save(new Product("banana", 1_000, 100, new Image("imageUrl", "imageALt")));
         productDao.save(new Product("apple", 2_000, 200, new Image("imageUrl", "imageAlt")));
 
-        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)", 1L, 1L);
-        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)", 1L, 2L);
+        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)", CUSTOMER_ID, 1L, 100);
+        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)", CUSTOMER_ID, 2L, 200);
     }
 
-    @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다. ")
+    @DisplayName("카트에 아이템을 담으면, 담긴 카트의 아이디를 반환한다.")
     @Test
     void addCartItem() {
-
         // given
-        final Long customerId = 1L;
         final Long productId = 1L;
+        final int quantity = 100;
 
         // when
-        final Long cartId = cartItemDao.addCartItem(customerId, productId);
+        final Long cartId = cartItemDao.addCartItem(CUSTOMER_ID, productId, quantity);
 
         // then
         assertThat(cartId).isEqualTo(3L);
     }
 
-    @DisplayName("커스터머 아이디를 넣으면, 해당 커스터머가 구매한 상품의 아이디 목록을 가져온다.")
+    @DisplayName("고객 정보(id)를 넣으면, 해당 고객이 장바구니에 담은 상품의 id목록을 가져온다.")
     @Test
     void findProductIdsByCustomerId() {
-
-        // given
-        final Long customerId = 1L;
-
-        // when
-        final List<Long> productsIds = cartItemDao.findProductIdsByCustomerId(customerId);
+        // given & when
+        final List<Cart> carts = cartItemDao.findCartsByCustomerId(CUSTOMER_ID);
 
         // then
-        assertThat(productsIds).containsExactly(1L, 2L);
+        final List<Long> cartIds = changeCartsToIds(carts);
+        assertThat(cartIds).containsExactly(1L, 2L);
     }
 
     @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
     @Test
     void findIdsByCustomerId() {
-
-        // given
-        final Long customerId = 1L;
-
-        // when
-        final List<Long> cartIds = cartItemDao.findIdsByCustomerId(customerId);
+        // given & when
+        final List<Cart> carts = cartItemDao.findCartsByCustomerId(CUSTOMER_ID);
 
         // then
+        final List<Long> cartIds = changeCartsToIds(carts);
         assertThat(cartIds).containsExactly(1L, 2L);
     }
 
     @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
     @Test
     void deleteCartItem() {
-
         // given
-        final Long cartId = 1L;
+        final List<Long> cartIds = List.of(1L);
 
         // when
-        cartItemDao.deleteCartItem(cartId);
+        cartItemDao.deleteCartItem(cartIds);
 
         // then
-        final Long customerId = 1L;
-        final List<Long> productIds = cartItemDao.findProductIdsByCustomerId(customerId);
+        final List<Cart> carts = cartItemDao.findCartsByCustomerId(CUSTOMER_ID);
+        final List<Long> foundCartIds = changeCartsToIds(carts);
+        assertThat(foundCartIds).containsExactly(2L);
+    }
 
-        assertThat(productIds).containsExactly(2L);
+    private List<Long> changeCartsToIds(List<Cart> carts) {
+        return carts.stream()
+                .map(Cart::getId)
+                .collect(toList());
     }
 }
