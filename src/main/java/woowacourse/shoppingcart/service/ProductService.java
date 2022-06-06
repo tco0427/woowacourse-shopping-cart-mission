@@ -16,19 +16,19 @@ public class ProductService {
         this.productDao = productDao;
     }
 
-    public List<Product> findProducts() {
+    public List<Product> findAll() {
         return productDao.findAll();
     }
 
-    public Long addProduct(final Product product) {
+    public Long save(final Product product) {
         return productDao.save(product);
     }
 
-    public Product findProductById(final Long productId) {
+    public Product findById(final Long productId) {
         return productDao.findById(productId);
     }
 
-    public void deleteProductById(final Long productId) {
+    public void deleteById(final Long productId) {
         productDao.deleteById(productId);
     }
 }

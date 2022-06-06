@@ -23,12 +23,12 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<List<Product>> products() {
-        return ResponseEntity.ok(productService.findProducts());
+        return ResponseEntity.ok(productService.findAll());
     }
 
     @PostMapping
     public ResponseEntity<Void> add(@Validated(Request.allProperties.class) @RequestBody final Product product) {
-        final Long productId = productService.addProduct(product);
+        final Long productId = productService.save(product);
         final URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/" + productId)
@@ -38,12 +38,12 @@ public class ProductController {
 
     @GetMapping("/{productId}")
     public ResponseEntity<Product> product(@PathVariable final Long productId) {
-        return ResponseEntity.ok(productService.findProductById(productId));
+        return ResponseEntity.ok(productService.findById(productId));
     }
 
     @DeleteMapping("/{productId}")
     public ResponseEntity<Void> delete(@PathVariable final Long productId) {
-        productService.deleteProductById(productId);
+        productService.deleteById(productId);
         return ResponseEntity.noContent().build();
     }
 }
