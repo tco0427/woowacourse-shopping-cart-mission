@@ -15,7 +15,7 @@ import woowacourse.shoppingcart.domain.Image;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.ProductRequest;
 import woowacourse.shoppingcart.dto.ProductResponse;
-import woowacourse.shoppingcart.dto.ProductResponses;
+import woowacourse.shoppingcart.dto.ProductsResponse;
 import woowacourse.shoppingcart.dto.ThumbnailImage;
 
 @DisplayName("상품 관련 기능")
@@ -23,7 +23,6 @@ public class ProductAcceptanceTest extends AcceptanceTest {
 
     private static final ThumbnailImage CHICKEN_IMAGE =
             new ThumbnailImage("http://example.com/chicken.jpg", "chicken");
-    private static final ThumbnailImage BEER_IMAGE = new ThumbnailImage("http://example.com/beer.jpg", "beer");
 
     @DisplayName("상품 정보를 가지고 상품 추가를 요청하면 상품이 저장된다.")
     @Test
@@ -109,7 +108,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     }
 
     private List<Long> extractIds(ExtractableResponse<Response> response) {
-        final ProductResponses responses = response.jsonPath().getObject(".", ProductResponses.class);
+        final ProductsResponse responses = response.jsonPath().getObject(".", ProductsResponse.class);
         return responses.getProductResponses().stream()
                 .map(ProductResponse::getId)
                 .collect(toList());

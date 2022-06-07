@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import woowacourse.shoppingcart.dto.ProductRequest;
 import woowacourse.shoppingcart.dto.ProductResponse;
-import woowacourse.shoppingcart.dto.ProductResponses;
+import woowacourse.shoppingcart.dto.ProductsResponse;
 import woowacourse.shoppingcart.dto.ThumbnailImage;
 import woowacourse.shoppingcart.exception.NotExistException;
 
@@ -55,10 +55,10 @@ class ProductServiceTest {
         final Long savedSnackId = productService.save(chocolateRequest).getId();
 
         // when
-        final ProductResponses productResponses = productService.findAll();
+        final ProductsResponse productsResponse = productService.findAll();
 
         // then
-        assertThat(productResponses.getProductResponses())
+        assertThat(productsResponse.getProductResponses())
                 .hasSize(2)
                 .extracting("id")
                 .contains(savedChocolateId, savedSnackId);

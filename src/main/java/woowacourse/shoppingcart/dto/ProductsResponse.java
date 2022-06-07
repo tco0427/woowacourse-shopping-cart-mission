@@ -2,14 +2,14 @@ package woowacourse.shoppingcart.dto;
 
 import java.util.List;
 
-public class ProductResponses {
+public class ProductsResponse {
 
     private List<ProductResponse> productResponses;
 
-    private ProductResponses() {
+    private ProductsResponse() {
     }
 
-    public ProductResponses(List<ProductResponse> productResponses) {
+    public ProductsResponse(List<ProductResponse> productResponses) {
         this.productResponses = productResponses;
     }
 

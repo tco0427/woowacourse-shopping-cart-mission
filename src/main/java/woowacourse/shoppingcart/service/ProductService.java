@@ -10,7 +10,7 @@ import woowacourse.shoppingcart.domain.Image;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.ProductRequest;
 import woowacourse.shoppingcart.dto.ProductResponse;
-import woowacourse.shoppingcart.dto.ProductResponses;
+import woowacourse.shoppingcart.dto.ProductsResponse;
 import woowacourse.shoppingcart.dto.ThumbnailImage;
 
 @Service
@@ -23,14 +23,14 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public ProductResponses findAll() {
+    public ProductsResponse findAll() {
         final List<Product> products = productDao.findAll();
 
         final List<ProductResponse> productResponses = products.stream()
                 .map(ProductResponse::new)
                 .collect(toList());
 
-        return new ProductResponses(productResponses);
+        return new ProductsResponse(productResponses);
     }
 
     public ProductResponse save(ProductRequest request) {

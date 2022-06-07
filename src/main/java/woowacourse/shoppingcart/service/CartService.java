@@ -9,6 +9,11 @@ import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.dto.CartRemovalRequest;
+import woowacourse.shoppingcart.dto.CartRequest;
+import woowacourse.shoppingcart.dto.CartResponse;
+import woowacourse.shoppingcart.dto.CartsResponse;
+import woowacourse.shoppingcart.dto.UpdateQuantityRequest;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 @Service
@@ -24,28 +29,41 @@ public class CartService {
     }
 
     @Transactional(readOnly = true)
-    public Cart findById(Long id) {
-        return cartItemDao.findById(id);
+    public CartResponse findById(String email, Long id) {
+        final Cart cart = cartItemDao.findByEmailAndId(email, id);
+
+        return new CartResponse(cart);
     }
 
     @Transactional(readOnly = true)
-    public List<Cart> findCartsByCustomer(String email) {
+    public CartsResponse findCartsByCustomer(String email) {
         final Customer customer = customerDao.findByEmail(email);
-        return cartItemDao.findCartsByCustomerId(customer.getId());
+
+        final List<Cart> carts = cartItemDao.findCartsByCustomerId(customer.getId());
+
+        final List<CartResponse> cartResponses = carts.stream()
+                .map(CartResponse::new)
+                .collect(toList());
+
+        return new CartsResponse(cartResponses);
     }
 
-    public Long addCart(String email, Long productId, int quantity) {
+    public CartResponse addCart(String email, CartRequest request) {
         final Customer customer = customerDao.findByEmail(email);
-        return cartItemDao.addCartItem(customer.getId(), productId, quantity);
+        final Long cartId = cartItemDao.addCartItem(customer.getId(), request.getProductId(), request.getQuantity());
+
+        final Cart cart = cartItemDao.findByEmailAndId(email, cartId);
+
+        return new CartResponse(cart);
     }
 
-    public void updateQuantity(String email, Long cartItemId, int quantity) {
-        checkCartOwner(email, cartItemId);
-        cartItemDao.updateCartQuantity(cartItemId, quantity);
+    public void updateQuantity(String email, UpdateQuantityRequest request) {
+        checkCartOwner(email, request.getCartItemId());
+        cartItemDao.updateCartQuantity(request.getCartItemId(), request.getQuantity());
     }
 
     private void checkCartOwner(String email, Long cartItemId) {
-        final List<Cart> carts = findCartsByCustomer(email);
+        final List<Cart> carts = findCartsByEmail(email);
         final List<Long> cartIds = convertCartsToCartIds(carts);
 
         if (!cartIds.contains(cartItemId)) {
@@ -53,18 +71,25 @@ public class CartService {
         }
     }
 
-    public void deleteCart(String email, List<Long> cartIds) {
+    public void deleteCart(String email, CartRemovalRequest request) {
+        final List<Long> cartIds = request.getCartItemIds();
         checkCartOwner(email, cartIds);
         cartItemDao.deleteCartItem(cartIds);
     }
 
     private void checkCartOwner(String email, List<Long> cartIds) {
-        final List<Cart> carts = findCartsByCustomer(email);
+        final List<Cart> carts = findCartsByEmail(email);
         final List<Long> customerCartIds = convertCartsToCartIds(carts);
 
         if (!customerCartIds.containsAll(cartIds)) {
             throw new InvalidCartItemException("Invalid CartItem");
         }
+    }
+
+    private List<Cart> findCartsByEmail(String email) {
+        final Customer customer = customerDao.findByEmail(email);
+        final List<Cart> carts = cartItemDao.findCartsByCustomerId(customer.getId());
+        return carts;
     }
 
     private List<Long> convertCartsToCartIds(List<Cart> carts) {

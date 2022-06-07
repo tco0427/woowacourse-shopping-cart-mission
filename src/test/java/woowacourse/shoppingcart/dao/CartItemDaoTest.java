@@ -16,6 +16,7 @@ import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Image;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.customer.Customer;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -23,25 +24,34 @@ import woowacourse.shoppingcart.domain.Product;
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 public class CartItemDaoTest {
 
-    private static final Long CUSTOMER_ID = 1L;
+    private static final String CUSTOMER_EMAIL = "email@email.com";
 
     private final CartItemDao cartItemDao;
     private final ProductDao productDao;
+    private final CustomerDao customerDao;
     private final JdbcTemplate jdbcTemplate;
 
     public CartItemDaoTest(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         cartItemDao = new CartItemDao(jdbcTemplate);
         productDao = new ProductDao(jdbcTemplate);
+        customerDao = new CustomerDao(jdbcTemplate);
     }
 
     @BeforeEach
     void setUp() {
-        productDao.save(new Product("banana", 1_000, 100, new Image("imageUrl", "imageALt")));
-        productDao.save(new Product("apple", 2_000, 200, new Image("imageUrl", "imageAlt")));
+        final Customer customer = new Customer(CUSTOMER_EMAIL, "password1!", "dwoo");
+        final Long savedId = customerDao.save(customer);
 
-        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)", CUSTOMER_ID, 1L, 100);
-        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)", CUSTOMER_ID, 2L, 200);
+        productDao.save(new Product("banana", 1_000, 100,
+                new Image("imageUrl", "imageALt")));
+        productDao.save(new Product("apple", 2_000, 200,
+                new Image("imageUrl", "imageAlt")));
+
+        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)",
+                savedId, 1L, 100);
+        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)",
+                savedId, 2L, 200);
     }
 
     @DisplayName("카트에 아이템을 담으면, 담긴 카트의 아이디를 반환한다.")
@@ -52,7 +62,7 @@ public class CartItemDaoTest {
         final int quantity = 100;
 
         // when
-        final Long cartId = cartItemDao.addCartItem(CUSTOMER_ID, productId, quantity);
+        final Long cartId = cartItemDao.addCartItem(getCustomerId(), productId, quantity);
 
         // then
         assertThat(cartId).isEqualTo(3L);
@@ -62,7 +72,7 @@ public class CartItemDaoTest {
     @Test
     public void findById() {
         // when
-        final Cart foundCart = cartItemDao.findById(1L);
+        final Cart foundCart = cartItemDao.findByEmailAndId(CUSTOMER_EMAIL, 1L);
 
         // then
         assertThat(foundCart)
@@ -74,7 +84,7 @@ public class CartItemDaoTest {
     @Test
     void findProductIdsByCustomerId() {
         // when
-        final List<Cart> carts = cartItemDao.findCartsByCustomerId(CUSTOMER_ID);
+        final List<Cart> carts = cartItemDao.findCartsByCustomerId(getCustomerId());
 
         // then
         final List<Long> cartIds = changeCartsToIds(carts);
@@ -85,7 +95,7 @@ public class CartItemDaoTest {
     @Test
     void findIdsByCustomerId() {
         // when
-        final List<Cart> carts = cartItemDao.findCartsByCustomerId(CUSTOMER_ID);
+        final List<Cart> carts = cartItemDao.findCartsByCustomerId(getCustomerId());
 
         // then
         final List<Long> cartIds = changeCartsToIds(carts);
@@ -102,7 +112,7 @@ public class CartItemDaoTest {
         cartItemDao.deleteCartItem(cartIds);
 
         // then
-        final List<Cart> carts = cartItemDao.findCartsByCustomerId(CUSTOMER_ID);
+        final List<Cart> carts = cartItemDao.findCartsByCustomerId(getCustomerId());
         final List<Long> foundCartIds = changeCartsToIds(carts);
         assertThat(foundCartIds).containsExactly(2L);
     }
@@ -111,5 +121,10 @@ public class CartItemDaoTest {
         return carts.stream()
                 .map(Cart::getId)
                 .collect(toList());
+    }
+
+    private Long getCustomerId() {
+        final Customer customer = customerDao.findByEmail(CUSTOMER_EMAIL);
+        return customer.getId();
     }
 }

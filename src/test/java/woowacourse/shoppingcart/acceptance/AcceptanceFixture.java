@@ -19,6 +19,17 @@ public class AcceptanceFixture {
                 .extract();
     }
 
+    public static <T> ExtractableResponse<Response> post(T params, String path, Header header) {
+        return RestAssured.given().log().all()
+                .header(header)
+                .body(params)
+                .contentType(APPLICATION_JSON_VALUE)
+                .when()
+                .post(path)
+                .then().log().all()
+                .extract();
+    }
+
     public static ExtractableResponse<Response> get(String path) {
         return RestAssured.given().log().all()
                 .when()

@@ -11,17 +11,21 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.dto.CartRemovalRequest;
+import woowacourse.shoppingcart.dto.CartRequest;
+import woowacourse.shoppingcart.dto.CartResponse;
+import woowacourse.shoppingcart.dto.CartsResponse;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.ProductRequest;
 import woowacourse.shoppingcart.dto.ThumbnailImage;
+import woowacourse.shoppingcart.dto.UpdateQuantityRequest;
 import woowacourse.shoppingcart.exception.NotExistException;
 
 @SpringBootTest
 @Sql("/truncate.sql")
 class CartServiceTest {
 
-    private static final String SAMPLE_EMAIL = "email@email.com";
+    private static final String CUSTOMER_EMAIL = "email@email.com";
 
     private static final ThumbnailImage CHOCOLATE_IMAGE =
             new ThumbnailImage("chocolateImageUrl", "chocolateImageAlt");
@@ -48,7 +52,7 @@ class CartServiceTest {
 
     @BeforeEach
     void setUp() {
-        final CustomerRequest request = new CustomerRequest(SAMPLE_EMAIL, "password1!", "dwoo");
+        final CustomerRequest request = new CustomerRequest(CUSTOMER_EMAIL, "password1!", "dwoo");
         customerService.save(request);
     }
 
@@ -57,14 +61,14 @@ class CartServiceTest {
     public void findById() {
         // given
         final Long savedProductId = productService.save(SAMPLE_PRODUCT_REQUEST).getId();
-        final Long savedId = cartService.addCart(SAMPLE_EMAIL, savedProductId, 5);
+        final CartRequest request = new CartRequest(savedProductId, 5);
+        final CartResponse cartResponse = cartService.addCart(CUSTOMER_EMAIL, request);
 
         // when
-        final Cart cart = cartService.findById(savedId);
+        final CartResponse savedResponse = cartService.findById(CUSTOMER_EMAIL, cartResponse.getId());
 
         // then
-        assertThat(cart).extracting("id", "product", "quantity")
-                .contains(cart.getId(), cart.getProduct(), cart.getQuantity());
+        assertThat(savedResponse.getId()).isEqualTo(cartResponse.getId());
     }
 
     @DisplayName("회원이 담은 장바구니 목록을 조회할 수 있다.")
@@ -74,17 +78,23 @@ class CartServiceTest {
         final Long chocolateId = productService.save(CHOCOLATE_PRODUCT_REQUEST).getId();
         final Long snackId = productService.save(SNACK_PRODUCT_REQUEST).getId();
 
-        final Long chocolateCartId = cartService.addCart(SAMPLE_EMAIL, chocolateId, 2);
-        final Long snackCartId = cartService.addCart(SAMPLE_EMAIL, snackId, 2);
+        final CartRequest chocolateRequest = new CartRequest(chocolateId, 2);
+        final CartRequest snackRequest = new CartRequest(snackId, 2);
+
+        final CartResponse chocolateResponse = cartService.addCart(CUSTOMER_EMAIL, chocolateRequest);
+        final CartResponse snackResponse = cartService.addCart(CUSTOMER_EMAIL, snackRequest);
 
         // when
-        final List<Cart> carts = cartService.findCartsByCustomer(SAMPLE_EMAIL);
+        final CartsResponse cartsResponse = cartService.findCartsByCustomer(CUSTOMER_EMAIL);
 
         // then
+        final List<CartResponse> carts = cartsResponse.getCarts();
         assertThat(carts).hasSize(2)
                 .extracting("id", "quantity")
-                .contains(tuple(chocolateCartId, 2),
-                        tuple(snackCartId, 2));
+                .contains(
+                        tuple(chocolateResponse.getId(), 2),
+                        tuple(snackResponse.getId(), 2)
+                );
     }
 
     @DisplayName("장바구니에 아이템을 추가할 수 있다.")
@@ -92,14 +102,14 @@ class CartServiceTest {
     public void addCart() {
         // given
         final Long savedProductId = productService.save(SAMPLE_PRODUCT_REQUEST).getId();
+        final CartRequest request = new CartRequest(savedProductId, 5);
 
         // when
-        final Long savedId = cartService.addCart(SAMPLE_EMAIL, savedProductId, 5);
+        final CartResponse savedResponse = cartService.addCart(CUSTOMER_EMAIL, request);
 
         // then
-        final Cart cart = cartService.findById(savedId);
-        assertThat(cart).extracting("id", "product", "quantity")
-                .contains(cart.getId(), cart.getProduct(), cart.getQuantity());
+        final CartResponse response = cartService.findById(CUSTOMER_EMAIL, savedResponse.getId());
+        assertThat(response.getId()).isEqualTo(savedResponse.getId());
     }
 
     @DisplayName("장바구니에 담은 아이템의 수량을 변경할 수 있다.")
@@ -107,14 +117,16 @@ class CartServiceTest {
     public void updateQuantity() {
         // given
         final Long savedProductId = productService.save(SAMPLE_PRODUCT_REQUEST).getId();
-        final Long savedId = cartService.addCart(SAMPLE_EMAIL, savedProductId, 5);
+        final CartRequest request = new CartRequest(savedProductId, 5);
+        final CartResponse savedResponse = cartService.addCart(CUSTOMER_EMAIL, request);
 
         // when
-        cartService.updateQuantity(SAMPLE_EMAIL, savedId, 10);
+        final UpdateQuantityRequest updateRequest = new UpdateQuantityRequest(savedResponse.getId(), 10);
+        cartService.updateQuantity(CUSTOMER_EMAIL, updateRequest);
 
         // then
-        final Cart cart = cartService.findById(savedId);
-        assertThat(cart.getQuantity()).isEqualTo(10);
+        final CartResponse response = cartService.findById(CUSTOMER_EMAIL, savedResponse.getId());
+        assertThat(response.getQuantity()).isEqualTo(10);
     }
 
     @DisplayName("장바구니에 담은 아이템을 삭제할 수 있다.")
@@ -122,13 +134,15 @@ class CartServiceTest {
     public void deleteCart() {
         // given
         final Long savedProductId = productService.save(SAMPLE_PRODUCT_REQUEST).getId();
-        final Long savedId = cartService.addCart(SAMPLE_EMAIL, savedProductId, 5);
+        final CartRequest saveRequest = new CartRequest(savedProductId, 5);
+        final CartResponse savedResponse = cartService.addCart(CUSTOMER_EMAIL, saveRequest);
 
         // when
-        cartService.deleteCart(SAMPLE_EMAIL, List.of(savedId));
+        final CartRemovalRequest request = new CartRemovalRequest(List.of(savedResponse.getId()));
+        cartService.deleteCart(CUSTOMER_EMAIL, request);
 
         // then
-        assertThatThrownBy(() -> cartService.findById(savedId))
+        assertThatThrownBy(() -> cartService.findById(CUSTOMER_EMAIL, savedResponse.getId()))
                 .isInstanceOf(NotExistException.class);
     }
 }
