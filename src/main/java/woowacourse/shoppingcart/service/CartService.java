@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
+import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.cart.request.CartRemovalRequest;
@@ -22,10 +23,12 @@ public class CartService {
 
     private final CartItemDao cartItemDao;
     private final CustomerDao customerDao;
+    private final ProductDao productDao;
 
-    public CartService(final CartItemDao cartItemDao, final CustomerDao customerDao) {
+    public CartService(CartItemDao cartItemDao, CustomerDao customerDao, ProductDao productDao) {
         this.cartItemDao = cartItemDao;
         this.customerDao = customerDao;
+        this.productDao = productDao;
     }
 
     @Transactional(readOnly = true)
@@ -50,6 +53,7 @@ public class CartService {
     public CartResponse addCart(String email, CartRequest request) {
         final Customer customer = customerDao.findByEmail(email);
         checkAlreadyExistCartItem(customer, request);
+        checkExistProduct(request.getProductId());
 
         final Long cartId = cartItemDao.addCartItem(customer.getId(), request.getProductId(), request.getQuantity());
         final Cart cart = cartItemDao.findByEmailAndId(email, cartId);
@@ -65,6 +69,10 @@ public class CartService {
         if (isExist) {
             throw new InvalidCartItemException("Already Exist");
         }
+    }
+
+    private void checkExistProduct(Long productId) {
+        productDao.findById(productId);
     }
 
     public void updateQuantity(String email, UpdateQuantityRequest request) {
