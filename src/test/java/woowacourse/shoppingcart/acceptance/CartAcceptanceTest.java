@@ -6,29 +6,25 @@ import static woowacourse.CustomerFixture.SAMPLE_EMAIL;
 import static woowacourse.CustomerFixture.SAMPLE_PASSWORD;
 import static woowacourse.CustomerFixture.SAMPLE_USERNAME;
 
-import io.restassured.RestAssured;
 import io.restassured.http.Header;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
+import woowacourse.shoppingcart.dto.ThumbnailImage;
 import woowacourse.shoppingcart.dto.cart.request.CartRemovalRequest;
 import woowacourse.shoppingcart.dto.cart.request.CartRequest;
+import woowacourse.shoppingcart.dto.cart.request.UpdateQuantityRequest;
 import woowacourse.shoppingcart.dto.cart.response.CartResponse;
 import woowacourse.shoppingcart.dto.cart.response.CartsResponse;
 import woowacourse.shoppingcart.dto.customer.request.CustomerRequest;
 import woowacourse.shoppingcart.dto.product.request.ProductRequest;
 import woowacourse.shoppingcart.dto.product.response.ProductResponse;
-import woowacourse.shoppingcart.dto.ThumbnailImage;
-import woowacourse.shoppingcart.dto.cart.request.UpdateQuantityRequest;
 
 @DisplayName("장바구니 관련 기능")
 public class CartAcceptanceTest extends AcceptanceTest {
@@ -38,8 +34,6 @@ public class CartAcceptanceTest extends AcceptanceTest {
             new ThumbnailImage("http://example.com/chicken.jpg", "chicken");
     private static final ThumbnailImage BEER_IMAGE =
             new ThumbnailImage("http://example.com/beer.jpg", "beer");
-
-    private static final String USER = "puterism";
 
     private Long productId1;
     private Long productId2;
@@ -207,23 +201,5 @@ public class CartAcceptanceTest extends AcceptanceTest {
         return carts.stream()
                 .map(CartResponse::getId)
                 .collect(toList());
-    }
-
-    public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(String userName, Long productId) {
-        Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("id", productId);
-
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(requestBody)
-                .when().post("/api/customers/{customerName}/carts", userName)
-                .then().log().all()
-                .extract();
-    }
-
-    public static Long 장바구니_아이템_추가되어_있음(String userName, Long productId) {
-        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(userName, productId);
-        return Long.parseLong(response.header("Location").split("/carts/")[1]);
     }
 }

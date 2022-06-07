@@ -8,8 +8,11 @@ import woowacourse.shoppingcart.dto.product.response.ProductResponse;
 
 public class OrderResponse {
 
-    private final Long id;
-    private final List<ProductResponse> orderedProducts;
+    private Long id;
+    private List<ProductResponse> orderedProducts;
+
+    private OrderResponse() {
+    }
 
     public OrderResponse(Orders orders) {
         this.id = orders.getId();

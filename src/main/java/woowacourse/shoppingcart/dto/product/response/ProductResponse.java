@@ -5,11 +5,14 @@ import woowacourse.shoppingcart.dto.ThumbnailImage;
 
 public class ProductResponse {
 
-    private final Long id;
-    private final String name;
-    private final int price;
-    private final int stockQuantity;
-    private final ThumbnailImage thumbnailImage;
+    private Long id;
+    private String name;
+    private int price;
+    private int stockQuantity;
+    private ThumbnailImage thumbnailImage;
+
+    private ProductResponse() {
+    }
 
     public ProductResponse(Long id, Product product) {
         this(id, product.getName(), product.getPrice(), product.getStockQuantity(),
