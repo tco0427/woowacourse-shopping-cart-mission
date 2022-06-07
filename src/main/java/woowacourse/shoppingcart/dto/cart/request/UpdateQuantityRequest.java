@@ -1,8 +1,12 @@
 package woowacourse.shoppingcart.dto.cart.request;
 
+import javax.validation.constraints.Min;
+
 public class UpdateQuantityRequest {
 
     private Long cartItemId;
+
+    @Min(value = 1, message = "Invalid Quantity")
     private int quantity;
 
     private UpdateQuantityRequest() {
