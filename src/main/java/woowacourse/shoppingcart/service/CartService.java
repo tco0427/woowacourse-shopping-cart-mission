@@ -49,10 +49,22 @@ public class CartService {
 
     public CartResponse addCart(String email, CartRequest request) {
         final Customer customer = customerDao.findByEmail(email);
+        checkAlreadyExistCartItem(customer, request);
+
         final Long cartId = cartItemDao.addCartItem(customer.getId(), request.getProductId(), request.getQuantity());
         final Cart cart = cartItemDao.findByEmailAndId(email, cartId);
 
         return new CartResponse(cart);
+    }
+
+    private void checkAlreadyExistCartItem(Customer customer, CartRequest request) {
+        final List<Cart> customerCarts = cartItemDao.findCartsByCustomerId(customer.getId());
+        final boolean isExist = customerCarts.stream()
+                .anyMatch(cart -> cart.getProduct().getId().equals(request.getProductId()));
+
+        if (isExist) {
+            throw new InvalidCartItemException("Already Exist");
+        }
     }
 
     public void updateQuantity(String email, UpdateQuantityRequest request) {

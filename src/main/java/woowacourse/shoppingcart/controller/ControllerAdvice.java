@@ -56,7 +56,7 @@ public class ControllerAdvice {
 
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> handle(InvalidCartItemException e) {
-        return ResponseEntity.badRequest().body(ErrorResponse.INVALID_CARTITEM);
+        return ResponseEntity.badRequest().body(ErrorResponse.from(e.getMessage()));
     }
 
     @ExceptionHandler

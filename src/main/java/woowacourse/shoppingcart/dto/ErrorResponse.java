@@ -16,6 +16,7 @@ public enum ErrorResponse {
     INVALID_EMAIL(4001, "Invalid Email"),
     INVALID_PASSWORD(4002, "Invalid Password"),
     INVALID_USERNAME(4003, "Invalid Username"),
+    ALREADY_EXIST(5001, "Already Exist"),
     INVALID_CARTITEM(5003, "Invalid CartItem"),
     NOT_EXIST_CUSTOMER(6004, "Not Exist Customer"),
     NOT_EXIST_PRODUCT(6001, "Not Exist Product");

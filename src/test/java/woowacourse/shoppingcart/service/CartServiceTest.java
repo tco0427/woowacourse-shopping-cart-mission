@@ -19,6 +19,7 @@ import woowacourse.shoppingcart.dto.customer.request.CustomerRequest;
 import woowacourse.shoppingcart.dto.product.request.ProductRequest;
 import woowacourse.shoppingcart.dto.ThumbnailImage;
 import woowacourse.shoppingcart.dto.cart.request.UpdateQuantityRequest;
+import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.NotExistException;
 
 @SpringBootTest
@@ -110,6 +111,21 @@ class CartServiceTest {
         // then
         final CartResponse response = cartService.findById(CUSTOMER_EMAIL, savedResponse.getId());
         assertThat(response.getId()).isEqualTo(savedResponse.getId());
+    }
+
+    @DisplayName("이미 장바구니에 아이템이 있는 경우 예외가 발생한다.")
+    @Test
+    public void alreadyExist() {
+        // given
+        final Long savedProductId = productService.save(SAMPLE_PRODUCT_REQUEST).getId();
+        final CartRequest request = new CartRequest(savedProductId, 5);
+
+        // when
+        final CartResponse savedResponse = cartService.addCart(CUSTOMER_EMAIL, request);
+
+        // then
+        assertThatThrownBy(() -> cartService.addCart(CUSTOMER_EMAIL, request))
+                .isInstanceOf(InvalidCartItemException.class);
     }
 
     @DisplayName("장바구니에 담은 아이템의 수량을 변경할 수 있다.")
