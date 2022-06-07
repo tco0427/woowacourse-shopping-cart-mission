@@ -39,7 +39,7 @@ public class CustomerDao {
         try {
             return jdbcTemplate.queryForObject(query, Map.of("id", id), CUSTOMER_ROW_MAPPER);
         } catch(EmptyResultDataAccessException e) {
-            throw new NotExistException();
+            throw new NotExistException("Not Exist Customer");
         }
     }
 
@@ -58,7 +58,7 @@ public class CustomerDao {
             final String query = "SELECT id FROM customer WHERE username = :username";
             return jdbcTemplate.queryForObject(query, Map.of("username", userName.toLowerCase(ROOT)), Long.class);
         } catch (final EmptyResultDataAccessException e) {
-            throw new NotExistException();
+            throw new NotExistException("Not Exist Customer");
         }
     }
 

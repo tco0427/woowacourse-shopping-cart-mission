@@ -65,8 +65,8 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler
-    public ResponseEntity<String> handle(NotExistException e) {
-        return ResponseEntity.badRequest().body("존재하지 않는 데이터 요청입니다.");
+    public ResponseEntity<ErrorResponse> handle(NotExistException e) {
+        return ResponseEntity.badRequest().body(ErrorResponse.from(e.getMessage()));
     }
 
     @ExceptionHandler({
