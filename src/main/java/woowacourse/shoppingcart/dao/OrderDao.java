@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.dao;
 
+import static java.lang.Boolean.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -146,5 +148,13 @@ public class OrderDao {
 
     private static RowMapper<Long> createOrdersIdRowMapper() {
         return (resultSet, rowNum) -> resultSet.getLong("id");
+    }
+
+    public boolean isValidOrderId(final Long customerId, final Long orderId) {
+        final String query = "SELECT EXISTS(SELECT * FROM orders WHERE customer_id = :customerId AND id = :orderId)";
+
+        return TRUE.equals(jdbcTemplate.queryForObject(query,
+                                Map.of("customerId", customerId, "orderId", orderId),
+                                Boolean.class));
     }
 }

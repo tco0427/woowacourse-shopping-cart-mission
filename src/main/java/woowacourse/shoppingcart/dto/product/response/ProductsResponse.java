@@ -4,10 +4,7 @@ import java.util.List;
 
 public class ProductsResponse {
 
-    private List<ProductResponse> productResponses;
-
-    private ProductsResponse() {
-    }
+    private final List<ProductResponse> productResponses;
 
     public ProductsResponse(List<ProductResponse> productResponses) {
         this.productResponses = productResponses;

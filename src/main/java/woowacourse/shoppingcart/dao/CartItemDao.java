@@ -42,9 +42,24 @@ public class CartItemDao {
                 + "WHERE cart_item.id = :id AND customer.email = :email";
 
         try {
-            return jdbcTemplate.queryForObject(query,
-                    Map.of("id", id, "email", email),
-                    CART_ITEM_ROW_MAPPER);
+            return jdbcTemplate.queryForObject(query, Map.of("id", id, "email", email), CART_ITEM_ROW_MAPPER);
+        } catch(EmptyResultDataAccessException e) {
+            throw new NotExistException();
+        }
+    }
+
+    public List<Cart> findByEmailAndIds(String email, List<Long> ids) {
+        final String query = "SELECT cart_item.id as id, product.id as product_id, "
+                + "product.name as name, product.price as price, product.stock_quantity, "
+                + "image.image_url as url, image.image_alt as alt, cart_item.quantity as quantity "
+                + "FROM cart_item "
+                + "JOIN product ON cart_item.product_id = product.id "
+                + "JOIN image ON image.id = product.image_id "
+                + "JOIN customer ON customer.id = cart_item.customer_id "
+                + "WHERE cart_item.id IN (:ids) AND customer.email = :email";
+
+        try {
+            return jdbcTemplate.query(query, Map.of("ids", ids, "email", email), CART_ITEM_ROW_MAPPER);
         } catch(EmptyResultDataAccessException e) {
             throw new NotExistException();
         }
