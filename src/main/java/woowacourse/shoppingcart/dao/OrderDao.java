@@ -78,6 +78,8 @@ public class OrderDao {
     }
 
     public Orders findById(Long id) {
+        checkValidOrder(id);
+
         final String query = "SELECT orders_detail.id as id, product.id as product_id, product.name as name, "
                 + "product.price as price, product.stock_quantity as stock_quantity, "
                 + "image.image_url as url, image.image_alt as alt, "
@@ -150,11 +152,21 @@ public class OrderDao {
         return (resultSet, rowNum) -> resultSet.getLong("id");
     }
 
-    public boolean isValidOrderId(final Long customerId, final Long orderId) {
+    private void checkValidOrder(Long id) {
+        final String query = "SELECT EXISTS(SELECT * orders WHERE id = :orderId)";
+
+        final Boolean isExist = jdbcTemplate.queryForObject(query, Map.of("orderId", id), Boolean.class);
+
+        if (FALSE.equals(isExist)) {
+            throw new NotExistException("Not Exist Order");
+        }
+    }
+
+    public boolean isValidOrderId(Long customerId, Long orderId) {
         final String query = "SELECT EXISTS(SELECT * FROM orders WHERE customer_id = :customerId AND id = :orderId)";
 
         return TRUE.equals(jdbcTemplate.queryForObject(query,
-                                Map.of("customerId", customerId, "orderId", orderId),
-                                Boolean.class));
+                Map.of("customerId", customerId, "orderId", orderId),
+                Boolean.class));
     }
 }

@@ -15,9 +15,7 @@ import woowacourse.auth.exception.InvalidLoginException;
 import woowacourse.auth.exception.InvalidTokenException;
 import woowacourse.shoppingcart.dto.ErrorResponse;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
-import woowacourse.shoppingcart.exception.InvalidOrderException;
 import woowacourse.shoppingcart.exception.InvalidPasswordException;
-import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotExistException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
@@ -78,8 +76,6 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler({
-            InvalidProductException.class,
-            InvalidOrderException.class,
             NotInCustomerCartItemException.class,
     })
     public ResponseEntity<String> handleInvalidAccess(final RuntimeException e) {

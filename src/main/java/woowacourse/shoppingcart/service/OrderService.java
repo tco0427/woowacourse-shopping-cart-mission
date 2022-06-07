@@ -52,7 +52,7 @@ public class OrderService {
         final Customer customer = customerDao.findByEmail(email);
         final List<Orders> orders = orderDao.findAll(customer);
 
-        validateOrderIdByCustomer(email, orders);
+        validateOrderIdsByCustomer(email, orders);
 
         final List<OrderResponse> orderResponses = createOrderResponses(orders);
 
@@ -73,7 +73,7 @@ public class OrderService {
         }
     }
 
-    private void validateOrderIdByCustomer(String email, List<Orders> orders) {
+    private void validateOrderIdsByCustomer(String email, List<Orders> orders) {
         final List<Long> ordersIds = orders.stream()
                 .map(Orders::getId)
                 .collect(toList());

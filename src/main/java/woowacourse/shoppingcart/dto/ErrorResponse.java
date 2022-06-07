@@ -19,9 +19,10 @@ public enum ErrorResponse {
     ALREADY_EXIST(5001, "Already Exist"),
     INVALID_QUANTITY(5002, "Invalid Quantity"),
     INVALID_CARTITEM(5003, "Invalid CartItem"),
-    NOT_EXIST_CUSTOMER(6004, "Not Exist Customer"),
+    NOT_EXIST_PRODUCT(6001, "Not Exist Product"),
     NOT_EXIST_CARTITEM(6002, "Not Exist CartItem"),
-    NOT_EXIST_PRODUCT(6001, "Not Exist Product");
+    NOT_EXIST_ORDER(6003, "Not Exist Order"),
+    NOT_EXIST_CUSTOMER(6004, "Not Exist Customer");
 
     private final int errorCode;
     private final String message;
