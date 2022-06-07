@@ -62,7 +62,7 @@ public class ProductDao {
         try {
             return jdbcTemplate.queryForObject(query, Map.of("id", id), PRODUCT_ROW_MAPPER);
         } catch(EmptyResultDataAccessException e) {
-            throw new NotExistException();
+            throw new NotExistException("Not Exist Product");
         }
     }
 
