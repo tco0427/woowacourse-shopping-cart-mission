@@ -85,7 +85,7 @@ public class CartService {
         final List<Long> cartIds = convertCartsToCartIds(carts);
 
         if (!cartIds.contains(cartItemId)) {
-            throw new InvalidCartItemException("Invalid CartItem");
+            throw new InvalidCartItemException("Not Exist CartItem");
         }
     }
 
@@ -110,6 +110,8 @@ public class CartService {
     }
 
     private List<Long> convertCartsToCartIds(List<Cart> carts) {
-        return carts.stream().map(Cart::getId).collect(toList());
+        return carts.stream()
+                .map(Cart::getId)
+                .collect(toList());
     }
 }

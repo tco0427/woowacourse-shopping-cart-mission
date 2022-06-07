@@ -20,6 +20,7 @@ public enum ErrorResponse {
     INVALID_QUANTITY(5002, "Invalid Quantity"),
     INVALID_CARTITEM(5003, "Invalid CartItem"),
     NOT_EXIST_CUSTOMER(6004, "Not Exist Customer"),
+    NOT_EXIST_CARTITEM(6002, "Not Exist CartItem"),
     NOT_EXIST_PRODUCT(6001, "Not Exist Product");
 
     private final int errorCode;
