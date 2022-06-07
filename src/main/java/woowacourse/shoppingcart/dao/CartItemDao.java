@@ -44,7 +44,7 @@ public class CartItemDao {
         try {
             return jdbcTemplate.queryForObject(query, Map.of("id", id, "email", email), CART_ITEM_ROW_MAPPER);
         } catch(EmptyResultDataAccessException e) {
-            throw new NotExistException();
+            throw new NotExistException("Not Exist CartItem");
         }
     }
 
@@ -61,7 +61,7 @@ public class CartItemDao {
         try {
             return jdbcTemplate.query(query, Map.of("ids", ids, "email", email), CART_ITEM_ROW_MAPPER);
         } catch(EmptyResultDataAccessException e) {
-            throw new NotExistException();
+            throw new NotExistException("Not Exist CartItem");
         }
     }
 

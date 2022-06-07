@@ -85,7 +85,7 @@ public class CartService {
         final List<Long> cartIds = convertCartsToCartIds(carts);
 
         if (!cartIds.contains(cartItemId)) {
-            throw new InvalidCartItemException("Not Exist CartItem");
+            throw new InvalidCartItemException("Invalid CartItem");
         }
     }
 
