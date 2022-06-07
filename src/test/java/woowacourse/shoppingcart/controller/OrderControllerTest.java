@@ -22,11 +22,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import woowacourse.shoppingcart.domain.Image;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.domain.Image;
-import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.service.OrderService;
 
@@ -83,8 +82,7 @@ public class OrderControllerTest {
         // given
         final String customerName = "pobi";
         final Long orderId = 1L;
-        final Customer customer = new Customer("email@email.com", "password1!", "dwoo");
-        final Orders expected = new Orders(orderId, customer,
+        final Orders expected = new Orders(orderId,
                 Collections.singletonList(new OrderDetail(2L, SAMPLE_PRODUCT, 2)));
 
         when(orderService.findOrderById(customerName, orderId))
@@ -107,11 +105,10 @@ public class OrderControllerTest {
     void findOrders() throws Exception {
         // given
         final String customerName = "pobi";
-        final Customer customer = new Customer("email@email.com", "password1!", "dwoo");
         final List<Orders> expected = Arrays.asList(
-                new Orders(1L, customer, Collections.singletonList(
+                new Orders(1L, Collections.singletonList(
                         new OrderDetail(1L, SAMPLE_PRODUCT, 2))),
-                new Orders(2L, customer, Collections.singletonList(
+                new Orders(2L, Collections.singletonList(
                         new OrderDetail(2L, SAMPLE_ANOTHER_PRODUCT, 4)))
         );
 

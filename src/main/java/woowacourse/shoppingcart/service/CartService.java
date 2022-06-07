@@ -88,8 +88,7 @@ public class CartService {
 
     private List<Cart> findCartsByEmail(String email) {
         final Customer customer = customerDao.findByEmail(email);
-        final List<Cart> carts = cartItemDao.findCartsByCustomerId(customer.getId());
-        return carts;
+        return cartItemDao.findCartsByCustomerId(customer.getId());
     }
 
     private List<Long> convertCartsToCartIds(List<Cart> carts) {
