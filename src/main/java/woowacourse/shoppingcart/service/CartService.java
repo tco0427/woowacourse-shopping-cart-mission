@@ -11,9 +11,9 @@ import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.cart.request.CartRemovalRequest;
 import woowacourse.shoppingcart.dto.cart.request.CartRequest;
+import woowacourse.shoppingcart.dto.cart.request.UpdateQuantityRequest;
 import woowacourse.shoppingcart.dto.cart.response.CartResponse;
 import woowacourse.shoppingcart.dto.cart.response.CartsResponse;
-import woowacourse.shoppingcart.dto.cart.request.UpdateQuantityRequest;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 @Service
@@ -38,7 +38,6 @@ public class CartService {
     @Transactional(readOnly = true)
     public CartsResponse findCartsByCustomer(String email) {
         final Customer customer = customerDao.findByEmail(email);
-
         final List<Cart> carts = cartItemDao.findCartsByCustomerId(customer.getId());
 
         final List<CartResponse> cartResponses = carts.stream()
@@ -51,7 +50,6 @@ public class CartService {
     public CartResponse addCart(String email, CartRequest request) {
         final Customer customer = customerDao.findByEmail(email);
         final Long cartId = cartItemDao.addCartItem(customer.getId(), request.getProductId(), request.getQuantity());
-
         final Cart cart = cartItemDao.findByEmailAndId(email, cartId);
 
         return new CartResponse(cart);
