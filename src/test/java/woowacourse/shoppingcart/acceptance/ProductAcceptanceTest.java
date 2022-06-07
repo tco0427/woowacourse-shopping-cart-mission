@@ -13,9 +13,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.shoppingcart.domain.Image;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.dto.ProductRequest;
-import woowacourse.shoppingcart.dto.ProductResponse;
-import woowacourse.shoppingcart.dto.ProductsResponse;
+import woowacourse.shoppingcart.dto.product.request.ProductRequest;
+import woowacourse.shoppingcart.dto.product.response.ProductResponse;
+import woowacourse.shoppingcart.dto.product.response.ProductsResponse;
 import woowacourse.shoppingcart.dto.ThumbnailImage;
 
 @DisplayName("상품 관련 기능")

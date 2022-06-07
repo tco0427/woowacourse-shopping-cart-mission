@@ -4,9 +4,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
-import woowacourse.shoppingcart.dto.ChangePasswordRequest;
-import woowacourse.shoppingcart.dto.CustomerRequest;
-import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.customer.request.ChangePasswordRequest;
+import woowacourse.shoppingcart.dto.customer.request.CustomerRequest;
+import woowacourse.shoppingcart.dto.customer.response.CustomerResponse;
 
 @Service
 @Transactional(rollbackFor = Exception.class)

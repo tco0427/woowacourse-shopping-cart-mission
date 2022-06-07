@@ -7,9 +7,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import woowacourse.shoppingcart.dto.ProductRequest;
-import woowacourse.shoppingcart.dto.ProductResponse;
-import woowacourse.shoppingcart.dto.ProductsResponse;
+import woowacourse.shoppingcart.dto.product.request.ProductRequest;
+import woowacourse.shoppingcart.dto.product.response.ProductResponse;
+import woowacourse.shoppingcart.dto.product.response.ProductsResponse;
 import woowacourse.shoppingcart.dto.ThumbnailImage;
 import woowacourse.shoppingcart.exception.NotExistException;
 

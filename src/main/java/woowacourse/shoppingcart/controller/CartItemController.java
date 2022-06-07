@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.support.AuthenticationPrincipal;
-import woowacourse.shoppingcart.dto.CartRemovalRequest;
-import woowacourse.shoppingcart.dto.CartRequest;
-import woowacourse.shoppingcart.dto.CartResponse;
-import woowacourse.shoppingcart.dto.CartsResponse;
-import woowacourse.shoppingcart.dto.UpdateQuantityRequest;
+import woowacourse.shoppingcart.dto.cart.request.CartRemovalRequest;
+import woowacourse.shoppingcart.dto.cart.request.CartRequest;
+import woowacourse.shoppingcart.dto.cart.response.CartResponse;
+import woowacourse.shoppingcart.dto.cart.response.CartsResponse;
+import woowacourse.shoppingcart.dto.cart.request.UpdateQuantityRequest;
 import woowacourse.shoppingcart.service.CartService;
 
 @RestController

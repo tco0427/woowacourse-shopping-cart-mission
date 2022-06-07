@@ -11,14 +11,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.dto.CartRemovalRequest;
-import woowacourse.shoppingcart.dto.CartRequest;
-import woowacourse.shoppingcart.dto.CartResponse;
-import woowacourse.shoppingcart.dto.CartsResponse;
-import woowacourse.shoppingcart.dto.CustomerRequest;
-import woowacourse.shoppingcart.dto.ProductRequest;
+import woowacourse.shoppingcart.dto.cart.request.CartRemovalRequest;
+import woowacourse.shoppingcart.dto.cart.request.CartRequest;
+import woowacourse.shoppingcart.dto.cart.response.CartResponse;
+import woowacourse.shoppingcart.dto.cart.response.CartsResponse;
+import woowacourse.shoppingcart.dto.customer.request.CustomerRequest;
+import woowacourse.shoppingcart.dto.product.request.ProductRequest;
 import woowacourse.shoppingcart.dto.ThumbnailImage;
-import woowacourse.shoppingcart.dto.UpdateQuantityRequest;
+import woowacourse.shoppingcart.dto.cart.request.UpdateQuantityRequest;
 import woowacourse.shoppingcart.exception.NotExistException;
 
 @SpringBootTest

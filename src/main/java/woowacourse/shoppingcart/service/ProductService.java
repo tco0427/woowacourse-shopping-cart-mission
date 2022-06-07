@@ -8,9 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Image;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.dto.ProductRequest;
-import woowacourse.shoppingcart.dto.ProductResponse;
-import woowacourse.shoppingcart.dto.ProductsResponse;
+import woowacourse.shoppingcart.dto.product.request.ProductRequest;
+import woowacourse.shoppingcart.dto.product.response.ProductResponse;
+import woowacourse.shoppingcart.dto.product.response.ProductsResponse;
 import woowacourse.shoppingcart.dto.ThumbnailImage;
 
 @Service

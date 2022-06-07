@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import woowacourse.shoppingcart.dto.ProductRequest;
-import woowacourse.shoppingcart.dto.ProductResponse;
-import woowacourse.shoppingcart.dto.ProductsResponse;
+import woowacourse.shoppingcart.dto.product.request.ProductRequest;
+import woowacourse.shoppingcart.dto.product.response.ProductResponse;
+import woowacourse.shoppingcart.dto.product.response.ProductsResponse;
 import woowacourse.shoppingcart.service.ProductService;
 
 @RestController

@@ -9,11 +9,11 @@ import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.customer.Customer;
-import woowacourse.shoppingcart.dto.CartRemovalRequest;
-import woowacourse.shoppingcart.dto.CartRequest;
-import woowacourse.shoppingcart.dto.CartResponse;
-import woowacourse.shoppingcart.dto.CartsResponse;
-import woowacourse.shoppingcart.dto.UpdateQuantityRequest;
+import woowacourse.shoppingcart.dto.cart.request.CartRemovalRequest;
+import woowacourse.shoppingcart.dto.cart.request.CartRequest;
+import woowacourse.shoppingcart.dto.cart.response.CartResponse;
+import woowacourse.shoppingcart.dto.cart.response.CartsResponse;
+import woowacourse.shoppingcart.dto.cart.request.UpdateQuantityRequest;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 @Service

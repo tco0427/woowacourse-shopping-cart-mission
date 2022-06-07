@@ -1,4 +1,6 @@
-package woowacourse.shoppingcart.dto;
+package woowacourse.shoppingcart.dto.product.request;
+
+import woowacourse.shoppingcart.dto.ThumbnailImage;
 
 public class ProductRequest {
 
