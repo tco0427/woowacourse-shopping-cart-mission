@@ -15,6 +15,7 @@ import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.order.request.OrderRequest;
 import woowacourse.shoppingcart.dto.order.response.OrderResponse;
 import woowacourse.shoppingcart.dto.order.response.OrdersResponse;
+import woowacourse.shoppingcart.exception.InvalidOrderException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -34,10 +35,21 @@ public class OrderService {
         final Customer customer = customerDao.findByEmail(email);
         final List<Cart> carts = cartItemDao.findByEmailAndIds(customer.getEmail(), request.getCartItemIds());
 
+        checkOverQuantity(carts);
+
         final List<Long> cartItemIds = convertCartsToCartItemIds(carts);
         cartItemDao.deleteCartItem(cartItemIds);
 
         return orderDao.addOrders(customer, carts);
+    }
+
+    private void checkOverQuantity(List<Cart> carts) {
+        final boolean isOverQuantity = carts.stream()
+                .anyMatch(cart -> cart.getQuantity() > cart.getProduct().getStockQuantity());
+
+        if (isOverQuantity) {
+            throw new InvalidOrderException("Out Of Stock");
+        }
     }
 
     private List<Long> convertCartsToCartItemIds(List<Cart> carts) {

@@ -22,7 +22,8 @@ public enum ErrorResponse {
     NOT_EXIST_PRODUCT(6001, "Not Exist Product"),
     NOT_EXIST_CARTITEM(6002, "Not Exist CartItem"),
     NOT_EXIST_ORDER(6003, "Not Exist Order"),
-    NOT_EXIST_CUSTOMER(6004, "Not Exist Customer");
+    NOT_EXIST_CUSTOMER(6004, "Not Exist Customer"),
+    OUT_OF_STOCK(7001, "Out Of Stock");
 
     private final int errorCode;
     private final String message;

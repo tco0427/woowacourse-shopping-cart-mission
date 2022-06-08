@@ -15,9 +15,9 @@ import woowacourse.auth.exception.InvalidLoginException;
 import woowacourse.auth.exception.InvalidTokenException;
 import woowacourse.shoppingcart.dto.ErrorResponse;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
+import woowacourse.shoppingcart.exception.InvalidOrderException;
 import woowacourse.shoppingcart.exception.InvalidPasswordException;
 import woowacourse.shoppingcart.exception.NotExistException;
-import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
 @RestControllerAdvice
 public class ControllerAdvice {
@@ -67,18 +67,16 @@ public class ControllerAdvice {
         return ResponseEntity.badRequest().body(ErrorResponse.from(e.getMessage()));
     }
 
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handle(InvalidOrderException e) {
+        return ResponseEntity.badRequest().body(ErrorResponse.from(e.getMessage()));
+    }
+
     @ExceptionHandler({
             HttpMessageNotReadableException.class,
             ConstraintViolationException.class,
     })
     public ResponseEntity<String> handleInvalidRequest(final RuntimeException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
-    }
-
-    @ExceptionHandler({
-            NotInCustomerCartItemException.class,
-    })
-    public ResponseEntity<String> handleInvalidAccess(final RuntimeException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 
