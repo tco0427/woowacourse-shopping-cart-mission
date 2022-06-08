@@ -1,11 +1,16 @@
 package woowacourse.shoppingcart.dto.product.request;
 
+import javax.validation.constraints.Min;
 import woowacourse.shoppingcart.dto.ThumbnailImage;
 
 public class ProductRequest {
 
     private String name;
+
+    @Min(value = 0, message = "Invalid Price")
     private int price;
+
+    @Min(value = 1, message = "Invalid Quantity")
     private int stockQuantity;
     private ThumbnailImage thumbnailImage;
 
