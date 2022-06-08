@@ -59,6 +59,7 @@ class OrderServiceTest {
         final Long savedProductId = productService.save(SAMPLE_PRODUCT_REQUEST).getId();
         final CartRequest cartRequest = new CartRequest(savedProductId, 5);
         final CartResponse cartResponse = cartService.addCart(CUSTOMER_EMAIL, cartRequest);
+        final int stockQuantity = SAMPLE_PRODUCT_REQUEST.getStockQuantity();
 
         // when
         final OrderRequest orderRequest = new OrderRequest(List.of(cartResponse.getId()));
@@ -67,6 +68,8 @@ class OrderServiceTest {
         // then
         final OrderResponse findOrderResponse = orderService.findOrderById(CUSTOMER_EMAIL, savedOrderId);
         assertThat(savedOrderId).isEqualTo(findOrderResponse.getId());
+        assertThat(productService.findById(savedProductId).getQuantity())
+                .isEqualTo(SAMPLE_PRODUCT_REQUEST.getStockQuantity() - cartResponse.getQuantity());
     }
 
     @DisplayName("Order의 id값을 통해서 주문 정보를 조회할 수 있다.")
