@@ -32,11 +32,18 @@ public class OrderService {
 
     public Long addOrder(String email, OrderRequest request) {
         final Customer customer = customerDao.findByEmail(email);
-        final List<Long> cartItemIds = request.getCartItemIds();
+        final List<Cart> carts = cartItemDao.findByEmailAndIds(customer.getEmail(), request.getCartItemIds());
 
-        final List<Cart> carts = cartItemDao.findByEmailAndIds(customer.getEmail(), cartItemIds);
+        final List<Long> cartItemIds = convertCartsToCartItemIds(carts);
+        cartItemDao.deleteCartItem(cartItemIds);
 
         return orderDao.addOrders(customer, carts);
+    }
+
+    private List<Long> convertCartsToCartItemIds(List<Cart> carts) {
+        return carts.stream()
+                .map(Cart::getId)
+                .collect(toList());
     }
 
     @Transactional(readOnly = true)
