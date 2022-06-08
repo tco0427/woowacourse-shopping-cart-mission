@@ -16,7 +16,7 @@ public class Quantity {
     }
 
     private static void validate(int quantity) {
-        if (quantity <= 0) {
+        if (quantity < 0) {
             throw new IllegalArgumentException("Invalid Quantity");
         }
     }
