@@ -23,11 +23,6 @@ import woowacourse.shoppingcart.exception.NotExistException;
 public class ControllerAdvice {
 
     @ExceptionHandler
-    public ResponseEntity<String> handle(RuntimeException e) {
-        return ResponseEntity.badRequest().body("Unhandled Exception");
-    }
-
-    @ExceptionHandler
     public ResponseEntity<ErrorResponse> handle(DuplicateKeyException e) {
         return ResponseEntity.badRequest().body(ErrorResponse.DUPLICATED_EMAIL);
     }
