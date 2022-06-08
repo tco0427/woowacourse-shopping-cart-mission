@@ -2,17 +2,17 @@ package woowacourse.shoppingcart.domain.vo;
 
 import java.util.Objects;
 
-public class Quantity {
+public class ProductQuantity {
 
     private final int quantity;
 
-    private Quantity(int quantity) {
+    private ProductQuantity(int quantity) {
         this.quantity = quantity;
     }
 
-    public static Quantity from(int quantity) {
+    public static ProductQuantity from(int quantity) {
         validate(quantity);
-        return new Quantity(quantity);
+        return new ProductQuantity(quantity);
     }
 
     private static void validate(int quantity) {
@@ -33,8 +33,8 @@ public class Quantity {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Quantity quantity1 = (Quantity) o;
-        return quantity == quantity1.quantity;
+        ProductQuantity productQuantity1 = (ProductQuantity) o;
+        return quantity == productQuantity1.quantity;
     }
 
     @Override

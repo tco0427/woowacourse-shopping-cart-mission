@@ -1,12 +1,12 @@
 package woowacourse.shoppingcart.domain;
 
-import woowacourse.shoppingcart.domain.vo.Quantity;
+import woowacourse.shoppingcart.domain.vo.OrderQuantity;
 
 public class OrderDetail {
 
     private final Long id;
     private final Product product;
-    private final Quantity quantity;
+    private final OrderQuantity orderQuantity;
 
     public OrderDetail(Product product, int quantity) {
         this(null, product, quantity);
@@ -15,7 +15,7 @@ public class OrderDetail {
     public OrderDetail(Long id, Product product, int quantity) {
         this.id = id;
         this.product = product;
-        this.quantity = Quantity.from(quantity);
+        this.orderQuantity = OrderQuantity.from(quantity);
     }
 
     public Long getId() {
@@ -27,6 +27,6 @@ public class OrderDetail {
     }
 
     public int getQuantity() {
-        return quantity.getQuantity();
+        return orderQuantity.getQuantity();
     }
 }

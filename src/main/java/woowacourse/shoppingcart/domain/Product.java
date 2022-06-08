@@ -1,14 +1,14 @@
 package woowacourse.shoppingcart.domain;
 
 import woowacourse.shoppingcart.domain.vo.Price;
-import woowacourse.shoppingcart.domain.vo.Quantity;
+import woowacourse.shoppingcart.domain.vo.ProductQuantity;
 
 public class Product {
 
     private final Long id;
     private final String name;
     private final Price price;
-    private final Quantity stockQuantity;
+    private final ProductQuantity stockProductQuantity;
     private final Image image;
 
     public Product(String name, int price, int stockQuantity, Image image) {
@@ -19,7 +19,7 @@ public class Product {
         this.id = id;
         this.name = name;
         this.price = Price.from(price);
-        this.stockQuantity = Quantity.from(stockQuantity);
+        this.stockProductQuantity = ProductQuantity.from(stockQuantity);
         this.image = image;
     }
 
@@ -36,7 +36,7 @@ public class Product {
     }
 
     public int getStockQuantity() {
-        return stockQuantity.getQuantity();
+        return stockProductQuantity.getQuantity();
     }
 
     public Image getImage() {
