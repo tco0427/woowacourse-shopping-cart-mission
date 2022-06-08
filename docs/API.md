@@ -506,6 +506,19 @@
     `errorCode` : 4002, `message` : Invalid Password
   - Username 형식 불만족
     `errorCode` : 4003, `message` : Invalid Username
-  
-    
 
+## 장바구니 [400, Bad Request]
+- ErrorCode는 `5000`번대를 사용한다.
+  - `errorCode` : 5001, `message` : Already Exist
+  - `errorCode` : 5002, `message` : Invalid Quantity
+
+## 데이터가 없는 경우 [400, Bad Request]
+- ErrorCode는 `6000`번대를 사용한다.
+  - `errorCode` : 6001, `message` : Not Exist Product
+  - `errorCode` : 6002, `message` : Not Exist CartItem
+  - `errorCode` : 6003, `message` : Not Exist Order
+  - `errorCode` : 6004, `message` : Not Exist Customer
+
+## 주문 [400, Bad Request]
+- ErrorCode는 `7000`번대를 사용한다.
+  - `errorCode` : 7001, `message` : Out Of Stock
