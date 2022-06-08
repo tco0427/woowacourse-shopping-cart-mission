@@ -153,7 +153,7 @@ public class OrderDao {
     }
 
     private void checkValidOrder(Long id) {
-        final String query = "SELECT EXISTS(SELECT * orders WHERE id = :orderId)";
+        final String query = "SELECT EXISTS(SELECT * FROM orders WHERE id = :orderId)";
 
         final Boolean isExist = jdbcTemplate.queryForObject(query, Map.of("orderId", id), Boolean.class);
 
