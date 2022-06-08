@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.controller;
 
 import java.net.URI;
+import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,9 +42,9 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<OrdersResponse> findOrders(@AuthenticationPrincipal String email) {
+    public ResponseEntity<List<OrderResponse>> findOrders(@AuthenticationPrincipal String email) {
         final OrdersResponse ordersResponse = orderService.findOrdersByCustomer(email);
 
-        return ResponseEntity.ok(ordersResponse);
+        return ResponseEntity.ok(ordersResponse.getOrders());
     }
 }

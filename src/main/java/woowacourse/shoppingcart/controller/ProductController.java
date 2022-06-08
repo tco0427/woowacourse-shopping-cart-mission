@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.controller;
 
 import java.net.URI;
+import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,10 +26,10 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<ProductsResponse> products() {
+    public ResponseEntity<List<ProductResponse>> products() {
         final ProductsResponse productsResponse = productService.findAll();
 
-        return ResponseEntity.ok(productsResponse);
+        return ResponseEntity.ok(productsResponse.getProductResponses());
     }
 
     @PostMapping
