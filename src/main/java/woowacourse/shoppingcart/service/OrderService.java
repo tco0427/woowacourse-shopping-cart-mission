@@ -40,17 +40,20 @@ public class OrderService {
         final List<Cart> carts = cartItemDao.findByEmailAndIds(customer.getEmail(), request.getCartItemIds());
 
         checkOverQuantity(carts);
-
-        for (Cart cart : carts) {
-            final Product product = productDao.findById(cart.getProduct().getId());
-            final int quantity = product.getStockQuantity() - cart.getQuantity();
-            productDao.updateQuantity(product.getId(), quantity);
-        }
+        reduceStockQuantity(carts);
 
         final List<Long> cartItemIds = convertCartsToCartItemIds(carts);
         cartItemDao.deleteCartItem(cartItemIds);
 
         return orderDao.addOrders(customer, carts);
+    }
+
+    private void reduceStockQuantity(List<Cart> carts) {
+        for (Cart cart : carts) {
+            final Product product = productDao.findById(cart.getProduct().getId());
+            final int quantity = product.getStockQuantity() - cart.getQuantity();
+            productDao.updateQuantity(product.getId(), quantity);
+        }
     }
 
     private void checkOverQuantity(List<Cart> carts) {
