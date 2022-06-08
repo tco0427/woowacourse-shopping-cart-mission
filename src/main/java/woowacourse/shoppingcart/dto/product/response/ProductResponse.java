@@ -8,7 +8,7 @@ public class ProductResponse {
     private Long id;
     private String name;
     private int price;
-    private int stockQuantity;
+    private int quantity;
     private ThumbnailImage thumbnailImage;
 
     private ProductResponse() {
@@ -24,11 +24,11 @@ public class ProductResponse {
                 product.getStockQuantity(), new ThumbnailImage(product.getImage()));
     }
 
-    public ProductResponse(Long id, String name, int price, int stockQuantity, ThumbnailImage thumbnailImage) {
+    public ProductResponse(Long id, String name, int price, int quantity, ThumbnailImage thumbnailImage) {
         this.id = id;
         this.name = name;
         this.price = price;
-        this.stockQuantity = stockQuantity;
+        this.quantity = quantity;
         this.thumbnailImage = thumbnailImage;
     }
     public Long getId() {
@@ -43,8 +43,8 @@ public class ProductResponse {
         return price;
     }
 
-    public int getStockQuantity() {
-        return stockQuantity;
+    public int getQuantity() {
+        return quantity;
     }
 
     public ThumbnailImage getThumbnailImage() {
