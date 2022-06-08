@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.controller;
 
 import java.net.URI;
 import java.util.List;
+import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,7 +46,7 @@ public class CartItemController {
 
     @PostMapping
     public ResponseEntity<CartResponse> addCartItem(
-            @AuthenticationPrincipal String email, @RequestBody CartRequest request) {
+            @AuthenticationPrincipal String email, @RequestBody @Valid CartRequest request) {
         final CartResponse response = cartService.addCart(email, request);
 
         return ResponseEntity.created(URI.create("/pai/mycarts/" + response.getId())).body(response);
@@ -53,7 +54,7 @@ public class CartItemController {
 
     @PatchMapping
     public ResponseEntity<Void> updateQuantity(@AuthenticationPrincipal String email,
-                                               @RequestBody UpdateQuantityRequest request) {
+                                               @RequestBody @Valid UpdateQuantityRequest request) {
         cartService.updateQuantity(email, request);
 
         return ResponseEntity.ok().build();

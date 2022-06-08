@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.controller;
 
 import java.net.URI;
 import java.util.List;
+import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,7 +34,7 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<ProductResponse> add(@RequestBody ProductRequest request) {
+    public ResponseEntity<ProductResponse> add(@RequestBody @Valid ProductRequest request) {
         final ProductResponse response = productService.save(request);
 
         return ResponseEntity.created(URI.create("/api/products/" + response.getId())).body(response);
