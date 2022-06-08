@@ -35,7 +35,6 @@
 
 ## 로그인
 
-
 - HTTP Method : **POST**
 - URI : `/api/auth/login`
 - RequestBody
@@ -130,6 +129,341 @@
   - Location: `/`
 - ResponseBody : NONE
 
+## 상품 목록 조회
+
+- HTTP Method : **GET**
+- URI : `/api/products`
+- RequestBody : NONE
+- ResponseHeader
+  - status code : `200 Ok`
+- ResponseBody
+  ```json
+  [
+    {
+        "id": 1,
+        "name": "Apple Watch Series 5",
+        "price": 120,
+        "stockQuantity": 0,
+        "thumbnailImage": {
+            "url": "https://develoger.kr/wp-content/uploads/apple-watch-1.jpg",
+            "alt": "Apple Watch Series 5"
+        }
+    },
+    {
+        "id": 2,
+        "name": "Apple Watch Nike",
+        "price": 400,
+        "stockQuantity": 0,
+        "thumbnailImage": {
+            "url": "https://develoger.kr/wp-content/uploads/apple-watch-nike.jpg",
+            "alt": "Apple Watch Nike"
+        }
+    }
+  ]
+  ```
+
+## 상품 추가
+
+- HTTP Method : **POST**
+- URI : `/api/products`
+- RequestBody
+  ```json
+  {
+    "name" : "맥북",
+    "price" : 1000,
+    "stockQuantity" : 10,
+    "thumbnailImage" : {
+      "url" : "url",
+      "alt" : "이미지입니다"
+    }
+  }
+  ```
+- ResponseHeader
+  - status code : `200 Ok`
+  - Location: `/api/products/1`
+- ResponseBody
+  ```json
+  {
+    "id" : 1,
+    "name" : "맥북",
+    "price" : 1000,
+    "stockQuantity" : 10,
+    "thumbnailImage" : {
+      "url" : "url",
+      "alt" : "이미지입니다"
+    }
+  }
+  ```
+
+## 상품 단건 조회
+
+- HTTP Method : **GET**
+- URI : `/api/products/{productId}`
+- RequestBody : NONE
+- ResponseHeader
+  - status code : `200 Ok`
+- ResponseBody
+  ```json
+  {
+      "id": 1,
+      "name": "Apple Watch Series 5",
+      "price": 120,
+      "stockQuantity": 0,
+      "thumbnailImage": {
+          "url": "https://develoger.kr/wp-content/uploads/apple-watch-1.jpg",
+          "alt": "Apple Watch Series 5"
+      }
+  }
+  ```
+
+## 상품 삭제
+
+- HTTP Method : **DELETE**
+- URI : `/api/products/{productId}`
+- RequestBody : NONE
+- ResponseHeader
+  - status code : `204 No Content`
+- ResponseBody : NONE
+
+## 장바구니 목록 조회
+
+- HTTP Method : **GET**
+- URI : `/api/mycarts`
+- RequestBody : NONE
+- RequestHeader <br>
+  `Authorization : Bearer XXXXXXX`
+- ResponseHeader
+  - status code : `200 Ok`
+- ResponseBody
+  ```json
+  [
+    {
+        "id": 1,
+        "productId" : 1,
+        "name": "Apple Watch Series 5",
+        "price": 120,
+        "quantity": 10,
+        "thumbnailImage": {
+            "url": "https://develoger.kr/wp-content/uploads/apple-watch-1.jpg",
+            "alt": "Apple Watch Series 5"
+        }
+    },
+    {
+        "id": 2,
+        "productId" : 2,
+        "name": "Apple Watch Nike",
+        "price": 400,
+        "quantity": 1,
+        "thumbnailImage": {
+            "url": "https://develoger.kr/wp-content/uploads/apple-watch-nike.jpg",
+            "alt": "Apple Watch Nike"
+        }
+    }
+  ]
+  ```
+
+## 장바구니 단건 조회
+
+- HTTP Method : **GET**
+- URI : `/api/mycarts/{cartItemId}`
+- RequestBody : NONE
+- RequestHeader <br>
+  `Authorization : Bearer XXXXXXX`
+- ResponseHeader
+  - status code : `200 Ok`
+- ResponseBody
+  ```json
+  {
+      "id": 13,
+      "productId" : 20,
+      "name": "Apple Watch Series 5",
+      "price": 120,
+      "quantity": 1,
+      "thumbnailImage": {
+          "url": "https://develoger.kr/wp-content/uploads/apple-watch-1.jpg",
+          "alt": "Apple Watch Series 5"
+      }
+  }
+  ```
+
+## 장바구니 추가 (처음 담기)
+
+- HTTP Method : **POST**
+- URI : `/api/mycarts`
+- RequestBody
+  ```json
+  {
+    "productId" : 1,
+    "quantity" : 1
+  }
+  ```
+- ResponseHeader
+  - status code : `201 Created`
+  - Location: `/api/mycarts/1`
+- ResponseBody
+  ```json
+  {
+    "id" : 1,
+    "productId" : 1,
+    "name" : "맥북",
+    "price" : 1000,
+    "quantity" : 10,
+    "thumbnailImage" : {
+      "url" : "url",
+      "alt" : "이미지입니다"
+    }
+  }
+  ```
+
+## 장바구니 개수 업데이트
+
+- HTTP Method : **PATCH**
+- URI : `/api/mycarts`
+- RequestHeader <br>
+  `Authorization : Bearer XXXXXXX`
+- RequestBody
+  ```json
+  {
+    "cartItemId" : 1,
+    "quantity" : 2
+  }
+  ```
+- ResponseHeader
+  - status code : `200 Ok`
+- ResponseBody : NONE
+
+## 장바구니 항목 삭제
+
+- HTTP Method : **DELETE**
+- URI : `/api/mycarts`
+- RequestHeader <br>
+  `Authorization : Bearer XXXXXXX`
+- RequestBody
+  ```json
+  {
+    "cartItemIds" : [1, 2, 3]
+  }
+  ```
+- ResponseHeader
+  - status code : `204 No Content`
+- ResponseBody : NONE
+
+
+## 주문 목록 조회
+
+- HTTP Method : **GET**
+- URI : `/api/myorders`
+- RequestBody : NONE
+- RequestHeader <br>
+  `Authorization : Bearer XXXXXXX`
+- ResponseHeader
+  - status code : `200 Ok`
+- ResponseBody
+  ```json
+  [
+    {
+        "id": 1,
+        "orderedProducts" : [
+          {
+            "productId" : 1,
+            "name": "Apple Watch Series 5",
+            "price": 120,
+            "quantity": 10,
+            "thumbnailImage": {
+              "url": "https://develoger.kr/wp-content/uploads/apple-watch-1.jpg",
+              "alt": "Apple Watch Series 5"
+            }
+          },
+          {
+            "productId" : 2,
+            "name": "Apple Watch Nike",
+            "price": 400,
+            "quantity": 1,
+            "thumbnailImage": {
+              "url": "https://develoger.kr/wp-content/uploads/apple-watch-nike.jpg",
+              "alt": "Apple Watch Nike"
+            }
+          }],
+        "id" : 2,
+        "orderedProducts" : [
+          {
+            "productId" : 1,
+            "name": "Apple Watch Series 5",
+            "price": 120,
+            "quantity": 10,
+            "thumbnailImage": {
+              "url": "https://develoger.kr/wp-content/uploads/apple-watch-1.jpg",
+              "alt": "Apple Watch Series 5"
+            }
+          },
+          {
+            "productId" : 2,
+            "name": "Apple Watch Nike",
+            "price": 400,
+            "quantity": 1,
+            "thumbnailImage": {
+              "url": "https://develoger.kr/wp-content/uploads/apple-watch-nike.jpg",
+              "alt": "Apple Watch Nike"
+            }
+          }]
+    }
+  ]
+  ```
+
+## 주문 추가하기
+
+- HTTP Method : **POST**
+- URI : `/api/myorders`
+- RequestBody
+  ```json
+  {
+    "cartItemIds" : [1, 2, 3]
+  }
+  ```
+- ResponseHeader
+  - status code : `201 Created`
+  - Location: `/api/myorders/1`
+- ResponseBody : NONE
+
+## 주문 단건조회
+
+- HTTP Method : **GET**
+- URI : `/api/myorders/{orderId}`
+- RequestBody : NONE
+- RequestHeader <br>
+  `Authorization : Bearer XXXXXXX`
+- ResponseHeader
+  - status code : `200 Ok`
+- ResponseBody
+  ```json
+  [
+    {
+        "id": 1,
+        "orderedProducts" : [
+          {
+            "productId" : 1,
+            "name": "Apple Watch Series 5",
+            "price": 120,
+            "quantity": 10,
+            "thumbnailImage": {
+              "url": "https://develoger.kr/wp-content/uploads/apple-watch-1.jpg",
+              "alt": "Apple Watch Series 5"
+            }
+          },
+          {
+            "productId" : 2,
+            "name": "Apple Watch Nike",
+            "price": 400,
+            "quantity": 1,
+            "thumbnailImage": {
+              "url": "https://develoger.kr/wp-content/uploads/apple-watch-nike.jpg",
+              "alt": "Apple Watch Nike"
+            }
+          }]
+    }
+  ]
+  ```
+  
 ---
 
 ## 에러 상황 시
