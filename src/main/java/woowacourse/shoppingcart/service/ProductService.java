@@ -8,10 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Image;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.ThumbnailImage;
 import woowacourse.shoppingcart.dto.product.request.ProductRequest;
 import woowacourse.shoppingcart.dto.product.response.ProductResponse;
-import woowacourse.shoppingcart.dto.product.response.ProductsResponse;
-import woowacourse.shoppingcart.dto.ThumbnailImage;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -23,14 +22,12 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public ProductsResponse findAll() {
+    public List<ProductResponse> findAll() {
         final List<Product> products = productDao.findAll();
 
-        final List<ProductResponse> productResponses = products.stream()
+        return products.stream()
                 .map(ProductResponse::new)
                 .collect(toList());
-
-        return new ProductsResponse(productResponses);
     }
 
     public ProductResponse save(ProductRequest request) {

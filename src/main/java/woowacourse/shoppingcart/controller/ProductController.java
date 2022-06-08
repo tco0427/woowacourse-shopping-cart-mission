@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.shoppingcart.dto.product.request.ProductRequest;
 import woowacourse.shoppingcart.dto.product.response.ProductResponse;
-import woowacourse.shoppingcart.dto.product.response.ProductsResponse;
 import woowacourse.shoppingcart.service.ProductService;
 
 @RestController
@@ -28,9 +27,9 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<List<ProductResponse>> products() {
-        final ProductsResponse productsResponse = productService.findAll();
+        final List<ProductResponse> response = productService.findAll();
 
-        return ResponseEntity.ok(productsResponse.getProductResponses());
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping

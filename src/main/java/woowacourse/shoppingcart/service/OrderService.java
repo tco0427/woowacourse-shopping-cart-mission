@@ -16,7 +16,6 @@ import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.order.request.OrderRequest;
 import woowacourse.shoppingcart.dto.order.response.OrderResponse;
-import woowacourse.shoppingcart.dto.order.response.OrdersResponse;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 
 @Service
@@ -80,15 +79,13 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public OrdersResponse findOrdersByCustomer(String email) {
+    public List<OrderResponse> findOrdersByCustomer(String email) {
         final Customer customer = customerDao.findByEmail(email);
         final List<Orders> orders = orderDao.findAll(customer);
 
         validateOrderIdsByCustomer(email, orders);
 
-        final List<OrderResponse> orderResponses = createOrderResponses(orders);
-
-        return new OrdersResponse(orderResponses);
+        return createOrderResponses(orders);
     }
 
     private List<OrderResponse> createOrderResponses(List<Orders> orders) {

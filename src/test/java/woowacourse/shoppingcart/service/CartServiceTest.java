@@ -11,14 +11,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.shoppingcart.dto.ThumbnailImage;
 import woowacourse.shoppingcart.dto.cart.request.CartRemovalRequest;
 import woowacourse.shoppingcart.dto.cart.request.CartRequest;
+import woowacourse.shoppingcart.dto.cart.request.UpdateQuantityRequest;
 import woowacourse.shoppingcart.dto.cart.response.CartResponse;
-import woowacourse.shoppingcart.dto.cart.response.CartsResponse;
 import woowacourse.shoppingcart.dto.customer.request.CustomerRequest;
 import woowacourse.shoppingcart.dto.product.request.ProductRequest;
-import woowacourse.shoppingcart.dto.ThumbnailImage;
-import woowacourse.shoppingcart.dto.cart.request.UpdateQuantityRequest;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.NotExistException;
 
@@ -86,11 +85,10 @@ class CartServiceTest {
         final CartResponse snackResponse = cartService.addCart(CUSTOMER_EMAIL, snackRequest);
 
         // when
-        final CartsResponse cartsResponse = cartService.findCartsByCustomer(CUSTOMER_EMAIL);
+        final List<CartResponse> cartResponses = cartService.findCartsByCustomer(CUSTOMER_EMAIL);
 
         // then
-        final List<CartResponse> carts = cartsResponse.getCarts();
-        assertThat(carts).hasSize(2)
+        assertThat(cartResponses).hasSize(2)
                 .extracting("id", "quantity")
                 .contains(
                         tuple(chocolateResponse.getId(), 2),

@@ -14,7 +14,6 @@ import woowacourse.shoppingcart.dto.cart.request.CartRemovalRequest;
 import woowacourse.shoppingcart.dto.cart.request.CartRequest;
 import woowacourse.shoppingcart.dto.cart.request.UpdateQuantityRequest;
 import woowacourse.shoppingcart.dto.cart.response.CartResponse;
-import woowacourse.shoppingcart.dto.cart.response.CartsResponse;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 @Service
@@ -39,7 +38,7 @@ public class CartService {
     }
 
     @Transactional(readOnly = true)
-    public CartsResponse findCartsByCustomer(String email) {
+    public List<CartResponse> findCartsByCustomer(String email) {
         final Customer customer = customerDao.findByEmail(email);
         final List<Cart> carts = cartItemDao.findCartsByCustomerId(customer.getId());
 
@@ -47,7 +46,7 @@ public class CartService {
                 .map(CartResponse::new)
                 .collect(toList());
 
-        return new CartsResponse(cartResponses);
+        return cartResponses;
     }
 
     public CartResponse addCart(String email, CartRequest request) {

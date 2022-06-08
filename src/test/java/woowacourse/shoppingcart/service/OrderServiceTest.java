@@ -15,7 +15,6 @@ import woowacourse.shoppingcart.dto.cart.response.CartResponse;
 import woowacourse.shoppingcart.dto.customer.request.CustomerRequest;
 import woowacourse.shoppingcart.dto.order.request.OrderRequest;
 import woowacourse.shoppingcart.dto.order.response.OrderResponse;
-import woowacourse.shoppingcart.dto.order.response.OrdersResponse;
 import woowacourse.shoppingcart.dto.product.request.ProductRequest;
 
 @SpringBootTest
@@ -106,12 +105,10 @@ class OrderServiceTest {
         final Long savedOrderId2 = orderService.addOrder(CUSTOMER_EMAIL, orderRequest2);
 
         // when
-        final OrdersResponse ordersResponse = orderService.findOrdersByCustomer(CUSTOMER_EMAIL);
+        final List<OrderResponse> orderResponses = orderService.findOrdersByCustomer(CUSTOMER_EMAIL);
 
         // then
-        final List<OrderResponse> orders = ordersResponse.getOrders();
-
-        assertThat(orders).hasSize(2)
+        assertThat(orderResponses).hasSize(2)
                 .extracting("id").contains(savedOrderId1, savedOrderId2);
     }
 }

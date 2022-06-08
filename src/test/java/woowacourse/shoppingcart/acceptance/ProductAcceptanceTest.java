@@ -12,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import woowacourse.shoppingcart.dto.ThumbnailImage;
 import woowacourse.shoppingcart.dto.product.request.ProductRequest;
 import woowacourse.shoppingcart.dto.product.response.ProductResponse;
-import woowacourse.shoppingcart.dto.product.response.ProductsResponse;
 
 @DisplayName("상품 관련 기능")
 public class ProductAcceptanceTest extends AcceptanceTest {
@@ -104,8 +103,11 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     }
 
     private List<Long> extractIds(ExtractableResponse<Response> response) {
-        final ProductsResponse responses = response.jsonPath().getObject(".", ProductsResponse.class);
-        return responses.getProductResponses().stream()
+        final List<ProductResponse> productResponses = response
+                .jsonPath()
+                .getList(".", ProductResponse.class);
+
+        return productResponses.stream()
                 .map(ProductResponse::getId)
                 .collect(toList());
     }

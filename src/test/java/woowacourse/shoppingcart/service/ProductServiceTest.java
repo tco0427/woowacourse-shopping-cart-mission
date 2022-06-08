@@ -3,14 +3,14 @@ package woowacourse.shoppingcart.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import woowacourse.shoppingcart.dto.ThumbnailImage;
 import woowacourse.shoppingcart.dto.product.request.ProductRequest;
 import woowacourse.shoppingcart.dto.product.response.ProductResponse;
-import woowacourse.shoppingcart.dto.product.response.ProductsResponse;
-import woowacourse.shoppingcart.dto.ThumbnailImage;
 import woowacourse.shoppingcart.exception.NotExistException;
 
 @SpringBootTest
@@ -55,10 +55,10 @@ class ProductServiceTest {
         final Long savedSnackId = productService.save(chocolateRequest).getId();
 
         // when
-        final ProductsResponse productsResponse = productService.findAll();
+        final List<ProductResponse> productResponses = productService.findAll();
 
         // then
-        assertThat(productsResponse.getProductResponses())
+        assertThat(productResponses)
                 .hasSize(2)
                 .extracting("id")
                 .contains(savedChocolateId, savedSnackId);

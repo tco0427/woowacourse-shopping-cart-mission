@@ -17,7 +17,6 @@ import woowacourse.shoppingcart.dto.cart.request.CartRemovalRequest;
 import woowacourse.shoppingcart.dto.cart.request.CartRequest;
 import woowacourse.shoppingcart.dto.cart.request.UpdateQuantityRequest;
 import woowacourse.shoppingcart.dto.cart.response.CartResponse;
-import woowacourse.shoppingcart.dto.cart.response.CartsResponse;
 import woowacourse.shoppingcart.service.CartService;
 
 @RestController
@@ -31,9 +30,9 @@ public class CartItemController {
 
     @GetMapping
     public ResponseEntity<List<CartResponse>> getCartItems(@AuthenticationPrincipal String email) {
-        final CartsResponse response = cartService.findCartsByCustomer(email);
+        final List<CartResponse> response = cartService.findCartsByCustomer(email);
 
-        return ResponseEntity.ok().body(response.getCarts());
+        return ResponseEntity.ok().body(response);
     }
 
     @GetMapping("/{cartId}")

@@ -21,7 +21,6 @@ import woowacourse.shoppingcart.dto.cart.request.CartRemovalRequest;
 import woowacourse.shoppingcart.dto.cart.request.CartRequest;
 import woowacourse.shoppingcart.dto.cart.request.UpdateQuantityRequest;
 import woowacourse.shoppingcart.dto.cart.response.CartResponse;
-import woowacourse.shoppingcart.dto.cart.response.CartsResponse;
 import woowacourse.shoppingcart.dto.customer.request.CustomerRequest;
 import woowacourse.shoppingcart.dto.product.request.ProductRequest;
 import woowacourse.shoppingcart.dto.product.response.ProductResponse;
@@ -196,9 +195,8 @@ public class CartAcceptanceTest extends AcceptanceTest {
     }
 
     private List<Long> extractProductIds(ExtractableResponse<Response> response) {
-        final CartsResponse cartsResponse = response.jsonPath().getObject(".", CartsResponse.class);
-        final List<CartResponse> carts = cartsResponse.getCarts();
-        return carts.stream()
+        final List<CartResponse> cartResponses = response.jsonPath().getList(".", CartResponse.class);
+        return cartResponses.stream()
                 .map(CartResponse::getId)
                 .collect(toList());
     }

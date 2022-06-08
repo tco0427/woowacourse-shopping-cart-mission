@@ -21,7 +21,6 @@ import woowacourse.shoppingcart.dto.cart.response.CartResponse;
 import woowacourse.shoppingcart.dto.customer.request.CustomerRequest;
 import woowacourse.shoppingcart.dto.order.request.OrderRequest;
 import woowacourse.shoppingcart.dto.order.response.OrderResponse;
-import woowacourse.shoppingcart.dto.order.response.OrdersResponse;
 import woowacourse.shoppingcart.dto.product.request.ProductRequest;
 import woowacourse.shoppingcart.dto.product.response.ProductResponse;
 
@@ -160,9 +159,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     }
 
     private List<OrderResponse> extractOrdersResponse(ExtractableResponse<Response> response) {
-        return response.jsonPath()
-                .getObject(".", OrdersResponse.class)
-                .getOrders();
+        return response.jsonPath().getList(".", OrderResponse.class);
     }
 
     private Long extractOrderIdFromLocation(ExtractableResponse<Response> response) {
