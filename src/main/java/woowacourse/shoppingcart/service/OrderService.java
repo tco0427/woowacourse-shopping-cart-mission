@@ -9,8 +9,10 @@ import woowacourse.auth.exception.InvalidTokenException;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.OrderDao;
+import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Orders;
+import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.order.request.OrderRequest;
 import woowacourse.shoppingcart.dto.order.response.OrderResponse;
@@ -24,11 +26,13 @@ public class OrderService {
     private final OrderDao orderDao;
     private final CartItemDao cartItemDao;
     private final CustomerDao customerDao;
+    private final ProductDao productDao;
 
-    public OrderService(OrderDao orderDao, CartItemDao cartItemDao, CustomerDao customerDao) {
+    public OrderService(OrderDao orderDao, CartItemDao cartItemDao, CustomerDao customerDao, ProductDao productDao) {
         this.orderDao = orderDao;
         this.cartItemDao = cartItemDao;
         this.customerDao = customerDao;
+        this.productDao = productDao;
     }
 
     public Long addOrder(String email, OrderRequest request) {
@@ -36,6 +40,12 @@ public class OrderService {
         final List<Cart> carts = cartItemDao.findByEmailAndIds(customer.getEmail(), request.getCartItemIds());
 
         checkOverQuantity(carts);
+
+        for (Cart cart : carts) {
+            final Product product = productDao.findById(cart.getProduct().getId());
+            final int quantity = product.getStockQuantity() - cart.getQuantity();
+            productDao.updateQuantity(product.getId(), quantity);
+        }
 
         final List<Long> cartItemIds = convertCartsToCartItemIds(carts);
         cartItemDao.deleteCartItem(cartItemIds);

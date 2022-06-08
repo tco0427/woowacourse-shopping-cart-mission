@@ -81,6 +81,12 @@ public class ProductDao {
         jdbcTemplate.update(query, Map.of("id", id));
     }
 
+    public void updateQuantity(Long id, int quantity) {
+        final String query = "UPDATE product SET stock_quantity = :quantity WHERE id = :id";
+
+        jdbcTemplate.update(query, Map.of("id", id, "quantity", quantity));
+    }
+
     private static RowMapper<Product> createProductRowMapper() {
         return (resultSet, rowNum) -> {
             final long id = resultSet.getLong("id");
