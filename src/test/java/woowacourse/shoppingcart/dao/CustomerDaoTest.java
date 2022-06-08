@@ -26,32 +26,6 @@ public class CustomerDaoTest {
         customerDao = new CustomerDao(jdbcTemplate);
     }
 
-    @DisplayName("username을 통해 아이디를 찾으면, id를 반환한다.")
-    @Test
-    void findIdByUserNameTest() {
-        // given
-        final String userName = "puterism";
-
-        // when
-        final Long customerId = customerDao.findIdByUserName(userName);
-
-        // then
-        assertThat(customerId).isEqualTo(1L);
-    }
-
-    @DisplayName("대소문자를 구별하지 않고 username을 통해 아이디를 찾으면, id를 반환한다.")
-    @Test
-    void findIdByUserNameTestIgnoreUpperLowerCase() {
-        // given
-        final String userName = "gwangyeol";
-
-        // when
-        final Long customerId = customerDao.findIdByUserName(userName);
-
-        // then
-        assertThat(customerId).isEqualTo(2L);
-    }
-
     @DisplayName("id 값을 통해서 Customer 를 조회할 수 있다.")
     @Test
     public void findById() {

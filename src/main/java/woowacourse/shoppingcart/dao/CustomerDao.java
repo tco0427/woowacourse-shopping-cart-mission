@@ -1,7 +1,5 @@
 package woowacourse.shoppingcart.dao;
 
-import static java.util.Locale.ROOT;
-
 import java.util.Map;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -50,15 +48,6 @@ public class CustomerDao {
             return jdbcTemplate.queryForObject(query, Map.of("email", email), CUSTOMER_ROW_MAPPER);
         } catch(EmptyResultDataAccessException e) {
             throw new NotExistException();
-        }
-    }
-
-    public Long findIdByUserName(final String userName) {
-        try {
-            final String query = "SELECT id FROM customer WHERE username = :username";
-            return jdbcTemplate.queryForObject(query, Map.of("username", userName.toLowerCase(ROOT)), Long.class);
-        } catch (final EmptyResultDataAccessException e) {
-            throw new NotExistException("Not Exist Customer");
         }
     }
 
