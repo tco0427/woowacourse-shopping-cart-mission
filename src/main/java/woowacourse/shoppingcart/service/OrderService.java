@@ -75,7 +75,7 @@ public class OrderService {
         validateOrderIdByCustomer(email, orderId);
         final Orders orders = orderDao.findById(orderId);
 
-        return new OrderResponse(orders);
+        return OrderResponse.from(orders);
     }
 
     @Transactional(readOnly = true)
@@ -90,7 +90,7 @@ public class OrderService {
 
     private List<OrderResponse> createOrderResponses(List<Orders> orders) {
         return orders.stream()
-                .map(OrderResponse::new)
+                .map(OrderResponse::from)
                 .collect(toList());
     }
 

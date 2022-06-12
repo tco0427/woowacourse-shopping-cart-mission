@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.dto.cart.response;
 
 import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.ThumbnailImage;
 
 public class CartResponse {
@@ -15,10 +16,12 @@ public class CartResponse {
     private CartResponse() {
     }
 
-    public CartResponse(Cart cart) {
-        this(cart.getId(), cart.getProduct().getId(), cart.getProduct().getName(),
-                cart.getProduct().getPrice(), cart.getQuantity(),
-                new ThumbnailImage(cart.getProduct().getImage()));
+    public static CartResponse from(Cart cart) {
+        final Product product = cart.getProduct();
+        final ThumbnailImage thumbnailImage = new ThumbnailImage(cart.getProduct().getImage());
+
+        return new CartResponse(cart.getId(), product.getId(),
+                product.getName(), product.getPrice(), cart.getQuantity(), thumbnailImage);
     }
 
     public CartResponse(Long id, Long productId, String name, int price, int quantity, ThumbnailImage thumbnailImage) {

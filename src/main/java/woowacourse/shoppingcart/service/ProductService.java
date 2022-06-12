@@ -26,7 +26,7 @@ public class ProductService {
         final List<Product> products = productDao.findAll();
 
         return products.stream()
-                .map(ProductResponse::new)
+                .map(ProductResponse::from)
                 .collect(toList());
     }
 
@@ -47,7 +47,7 @@ public class ProductService {
     public ProductResponse findById(final Long productId) {
         final Product product = productDao.findById(productId);
 
-        return new ProductResponse(product);
+        return ProductResponse.from(product);
     }
 
     public void deleteById(final Long productId) {

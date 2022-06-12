@@ -14,11 +14,13 @@ public class OrderResponse {
     private OrderResponse() {
     }
 
-    public OrderResponse(Orders orders) {
-        this.id = orders.getId();
-        this.orderedProducts = orders.getOrderDetails().stream()
-                .map(orderDetail -> new ProductResponse(orderDetail.getProduct()))
+    public static OrderResponse from(Orders orders) {
+        final List<ProductResponse> orderedProducts = orders.getOrderDetails()
+                .stream()
+                .map(orderDetail -> ProductResponse.from(orderDetail.getProduct()))
                 .collect(toList());
+
+        return new OrderResponse(orders.getId(), orderedProducts);
     }
 
     public OrderResponse(Long id, List<ProductResponse> orderedProducts) {

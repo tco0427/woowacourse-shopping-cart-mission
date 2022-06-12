@@ -19,9 +19,10 @@ public class ProductResponse {
                 new ThumbnailImage(product.getImage()));
     }
 
-    public ProductResponse(Product product) {
-        this(product.getId(), product.getName(), product.getPrice(),
-                product.getStockQuantity(), new ThumbnailImage(product.getImage()));
+    public static ProductResponse from(Product product) {
+        final ThumbnailImage thumbnailImage = new ThumbnailImage(product.getImage());
+        return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getStockQuantity(),
+                thumbnailImage);
     }
 
     public ProductResponse(Long id, String name, int price, int quantity, ThumbnailImage thumbnailImage) {

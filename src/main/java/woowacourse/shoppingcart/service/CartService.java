@@ -34,7 +34,7 @@ public class CartService {
     public CartResponse findById(String email, Long id) {
         final Cart cart = cartItemDao.findByEmailAndId(email, id);
 
-        return new CartResponse(cart);
+        return CartResponse.from(cart);
     }
 
     @Transactional(readOnly = true)
@@ -42,11 +42,9 @@ public class CartService {
         final Customer customer = customerDao.findByEmail(email);
         final List<Cart> carts = cartItemDao.findCartsByCustomerId(customer.getId());
 
-        final List<CartResponse> cartResponses = carts.stream()
-                .map(CartResponse::new)
+        return carts.stream()
+                .map(CartResponse::from)
                 .collect(toList());
-
-        return cartResponses;
     }
 
     public CartResponse addCart(String email, CartRequest request) {
@@ -57,7 +55,7 @@ public class CartService {
         final Long cartId = cartItemDao.addCartItem(customer.getId(), request.getProductId(), request.getQuantity());
         final Cart cart = cartItemDao.findByEmailAndId(email, cartId);
 
-        return new CartResponse(cart);
+        return CartResponse.from(cart);
     }
 
     private void checkAlreadyExistCartItem(Customer customer, CartRequest request) {
