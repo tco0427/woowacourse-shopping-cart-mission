@@ -16,8 +16,8 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Image;
+import woowacourse.shoppingcart.domain.Order;
 import woowacourse.shoppingcart.domain.OrderDetail;
-import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.exception.NotExistException;
@@ -38,7 +38,7 @@ public class OrderDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public List<Orders> findAll(Customer customer) {
+    public List<Order> findAll(Customer customer) {
         final List<Long> orderIds = findAllOrderId(customer.getEmail());
 
         final String query = "SELECT orders_detail.id as id, product.id as product_id, product.name as name, "
@@ -52,12 +52,12 @@ public class OrderDao {
         return makeOrders(query, orderIds);
     }
 
-    private List<Orders> makeOrders(String query, List<Long> orderIds) {
-        List<Orders> orders = new ArrayList<>();
+    private List<Order> makeOrders(String query, List<Long> orderIds) {
+        List<Order> orders = new ArrayList<>();
         for (Long orderId : orderIds) {
             final List<OrderDetail> orderDetails = jdbcTemplate.query(query, Map.of("orderId", orderId),
                     ORDERS_DETAIL_ROW_MAPPER);
-            final Orders order = new Orders(orderId, orderDetails);
+            final Order order = new Order(orderId, orderDetails);
             orders.add(order);
         }
 
@@ -77,7 +77,7 @@ public class OrderDao {
         }
     }
 
-    public Orders findById(Long id) {
+    public Order findById(Long id) {
         checkValidOrder(id);
 
         final String query = "SELECT orders_detail.id as id, product.id as product_id, product.name as name, "
@@ -92,7 +92,7 @@ public class OrderDao {
         final List<OrderDetail> orderDetails = jdbcTemplate.query(query, Map.of("orderId", id),
                 ORDERS_DETAIL_ROW_MAPPER);
 
-        return new Orders(id, orderDetails);
+        return new Order(id, orderDetails);
     }
 
     public Long addOrders(Customer customer, List<Cart> carts) {

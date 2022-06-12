@@ -1,6 +1,6 @@
 drop table if exists orders_detail;
 
-drop table if exists orders;
+drop table if exists order;
 
 drop table if exists cart_item;
 
@@ -58,14 +58,14 @@ alter table cart_item
     add constraint fk_cart_item_to_product
         foreign key (product_id) references product (id) ON DELETE CASCADE;
 
-create table orders
+create table order
 (
     id          bigint not null auto_increment,
     customer_id bigint not null,
     primary key (id)
 ) engine=InnoDB default charset=utf8mb4;
 
-alter table orders
+alter table order
     add constraint fk_orders_to_customer
         foreign key (customer_id) references customer (id) ON DELETE CASCADE;
 
@@ -80,7 +80,7 @@ create table orders_detail
 
 alter table orders_detail
     add constraint fk_orders_detail_to_orders
-        foreign key (orders_id) references orders (id) ON DELETE CASCADE;
+        foreign key (orders_id) references order (id) ON DELETE CASCADE;
 
 alter table orders_detail
     add constraint fk_orders_detail_to_product

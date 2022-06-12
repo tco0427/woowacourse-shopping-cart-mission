@@ -11,7 +11,7 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Cart;
-import woowacourse.shoppingcart.domain.Orders;
+import woowacourse.shoppingcart.domain.Order;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.order.request.OrderRequest;
@@ -73,22 +73,22 @@ public class OrderService {
     @Transactional(readOnly = true)
     public OrderResponse findOrderById(String email, final Long orderId) {
         validateOrderIdByCustomer(email, orderId);
-        final Orders orders = orderDao.findById(orderId);
+        final Order order = orderDao.findById(orderId);
 
-        return OrderResponse.from(orders);
+        return OrderResponse.from(order);
     }
 
     @Transactional(readOnly = true)
     public List<OrderResponse> findOrdersByCustomer(String email) {
         final Customer customer = customerDao.findByEmail(email);
-        final List<Orders> orders = orderDao.findAll(customer);
+        final List<Order> orders = orderDao.findAll(customer);
 
         validateOrderIdsByCustomer(email, orders);
 
         return createOrderResponses(orders);
     }
 
-    private List<OrderResponse> createOrderResponses(List<Orders> orders) {
+    private List<OrderResponse> createOrderResponses(List<Order> orders) {
         return orders.stream()
                 .map(OrderResponse::from)
                 .collect(toList());
@@ -102,9 +102,9 @@ public class OrderService {
         }
     }
 
-    private void validateOrderIdsByCustomer(String email, List<Orders> orders) {
+    private void validateOrderIdsByCustomer(String email, List<Order> orders) {
         final List<Long> ordersIds = orders.stream()
-                .map(Orders::getId)
+                .map(Order::getId)
                 .collect(toList());
 
         for (Long ordersId : ordersIds) {

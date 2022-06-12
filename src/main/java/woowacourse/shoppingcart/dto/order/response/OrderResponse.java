@@ -3,7 +3,7 @@ package woowacourse.shoppingcart.dto.order.response;
 import static java.util.stream.Collectors.toList;
 
 import java.util.List;
-import woowacourse.shoppingcart.domain.Orders;
+import woowacourse.shoppingcart.domain.Order;
 import woowacourse.shoppingcart.dto.product.response.ProductResponse;
 
 public class OrderResponse {
@@ -14,13 +14,13 @@ public class OrderResponse {
     private OrderResponse() {
     }
 
-    public static OrderResponse from(Orders orders) {
-        final List<ProductResponse> orderedProducts = orders.getOrderDetails()
+    public static OrderResponse from(Order order) {
+        final List<ProductResponse> orderedProducts = order.getOrderDetails()
                 .stream()
                 .map(orderDetail -> ProductResponse.from(orderDetail.getProduct()))
                 .collect(toList());
 
-        return new OrderResponse(orders.getId(), orderedProducts);
+        return new OrderResponse(order.getId(), orderedProducts);
     }
 
     public OrderResponse(Long id, List<ProductResponse> orderedProducts) {

@@ -15,7 +15,7 @@ import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Image;
-import woowacourse.shoppingcart.domain.Orders;
+import woowacourse.shoppingcart.domain.Order;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.customer.Customer;
 
@@ -69,8 +69,8 @@ class OrderDaoTest {
         final Long orderId = orderDao.addOrders(customer, List.of(cart));
 
         //then
-        final Orders orders = orderDao.findById(orderId);
-        assertThat(orders.getId()).isEqualTo(orderId);
+        final Order order = orderDao.findById(orderId);
+        assertThat(order.getId()).isEqualTo(orderId);
     }
 
     @DisplayName("주문 id(pk)를 통해서 주문 내역을 조회할 수 있다.")
@@ -83,11 +83,11 @@ class OrderDaoTest {
         final Long orderId = orderDao.addOrders(customer, List.of(cart));
 
         // when
-        final Orders orders = orderDao.findById(orderId);
+        final Order order = orderDao.findById(orderId);
 
         // then
-        assertThat(orders.getId()).isEqualTo(orderId);
-        assertThat(orders.getOrderDetails().size()).isEqualTo(1);
+        assertThat(order.getId()).isEqualTo(orderId);
+        assertThat(order.getOrderDetails().size()).isEqualTo(1);
     }
 
     @DisplayName("회원이 지금까지 주문 했던 내역을 모두 조회할 수 있다.")
@@ -104,7 +104,7 @@ class OrderDaoTest {
         final Long orderId2 = orderDao.addOrders(customer, List.of(cart2));
 
         // when
-        final List<Orders> orders = orderDao.findAll(customer);
+        final List<Order> orders = orderDao.findAll(customer);
 
         // then
         assertThat(orders.size()).isEqualTo(2);
