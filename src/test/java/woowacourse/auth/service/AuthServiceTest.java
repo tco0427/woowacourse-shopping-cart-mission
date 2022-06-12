@@ -1,9 +1,9 @@
 package woowacourse.auth.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static woowacourse.CustomerFixture.SAMPLE_EMAIL;
-import static woowacourse.CustomerFixture.SAMPLE_PASSWORD;
-import static woowacourse.CustomerFixture.SAMPLE_USERNAME;
+import static woowacourse.CustomerFixture.CUSTOMER_EMAIL;
+import static woowacourse.CustomerFixture.CUSTOMER_PASSWORD;
+import static woowacourse.CustomerFixture.CUSTOMER_USERNAME;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,7 +33,7 @@ class AuthServiceTest {
     public void createToken() {
         // given
         saveSampleCustomer();
-        final TokenRequest tokenRequest = new TokenRequest(SAMPLE_EMAIL, SAMPLE_PASSWORD);
+        final TokenRequest tokenRequest = new TokenRequest(CUSTOMER_EMAIL, CUSTOMER_PASSWORD);
 
         // when
         final TokenResponse tokenResponse = authService.createToken(tokenRequest);
@@ -47,7 +47,7 @@ class AuthServiceTest {
     public void findCustomerByToken() {
         // given
         saveSampleCustomer();
-        final TokenRequest tokenRequest = new TokenRequest(SAMPLE_EMAIL, SAMPLE_PASSWORD);
+        final TokenRequest tokenRequest = new TokenRequest(CUSTOMER_EMAIL, CUSTOMER_PASSWORD);
         final TokenResponse tokenResponse = authService.createToken(tokenRequest);
 
         // when
@@ -55,12 +55,12 @@ class AuthServiceTest {
         final String email = authService.findCustomerByToken(accessToken);
 
         // then
-        assertThat(email).isEqualTo(SAMPLE_EMAIL);
+        assertThat(email).isEqualTo(CUSTOMER_EMAIL);
     }
 
     private void saveSampleCustomer() {
         final CustomerRequest customerRequest =
-                new CustomerRequest(SAMPLE_EMAIL, SAMPLE_PASSWORD, SAMPLE_USERNAME);
+                new CustomerRequest(CUSTOMER_EMAIL, CUSTOMER_PASSWORD, CUSTOMER_USERNAME);
         customerService.save(customerRequest);
     }
 }

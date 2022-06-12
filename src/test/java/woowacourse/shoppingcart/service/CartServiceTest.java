@@ -3,6 +3,11 @@ package woowacourse.shoppingcart.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.tuple;
+import static woowacourse.CustomerFixture.CUSTOMER_REQUEST;
+import static woowacourse.CustomerFixture.CUSTOMER_EMAIL;
+import static woowacourse.ProductFixture.CHOCOLATE_PRODUCT_REQUEST;
+import static woowacourse.ProductFixture.SAMPLE_PRODUCT_REQUEST;
+import static woowacourse.ProductFixture.SNACK_PRODUCT_REQUEST;
 
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,33 +16,16 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.dto.ThumbnailImageDto;
 import woowacourse.shoppingcart.dto.cart.request.CartRemovalRequest;
 import woowacourse.shoppingcart.dto.cart.request.CartRequest;
 import woowacourse.shoppingcart.dto.cart.request.UpdateQuantityRequest;
 import woowacourse.shoppingcart.dto.cart.response.CartResponse;
-import woowacourse.shoppingcart.dto.customer.request.CustomerRequest;
-import woowacourse.shoppingcart.dto.product.request.ProductRequest;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.NotExistException;
 
 @SpringBootTest
 @Sql("/truncate.sql")
 class CartServiceTest {
-
-    private static final String CUSTOMER_EMAIL = "email@email.com";
-
-    private static final ThumbnailImageDto CHOCOLATE_IMAGE =
-            new ThumbnailImageDto("chocolateImageUrl", "chocolateImageAlt");
-    private static final ThumbnailImageDto SNACK_IMAGE = new ThumbnailImageDto("snackImageUrl", "snackImageAlt");
-    private static final ThumbnailImageDto SAMPLE_IMAGE = new ThumbnailImageDto("sampleUrl", "sampleAlt");
-
-    private static final ProductRequest CHOCOLATE_PRODUCT_REQUEST =
-            new ProductRequest("chocolate", 1_000, 100, CHOCOLATE_IMAGE);
-    private static final ProductRequest SAMPLE_PRODUCT_REQUEST =
-            new ProductRequest("sample", 10_000, 10, SAMPLE_IMAGE);
-    private static final ProductRequest SNACK_PRODUCT_REQUEST =
-            new ProductRequest("snack", 1_000, 100, SNACK_IMAGE);
 
     private final CartService cartService;
     private final CustomerService customerService;
@@ -52,8 +40,7 @@ class CartServiceTest {
 
     @BeforeEach
     void setUp() {
-        final CustomerRequest request = new CustomerRequest(CUSTOMER_EMAIL, "password1!", "dwoo");
-        customerService.save(request);
+        customerService.save(CUSTOMER_REQUEST);
     }
 
     @DisplayName("장바구니에 담긴 상품에 대한 id를 통해서 단건 조회를 할 수 있다.")

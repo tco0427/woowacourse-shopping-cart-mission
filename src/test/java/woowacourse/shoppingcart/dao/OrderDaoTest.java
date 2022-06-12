@@ -2,6 +2,8 @@
 package woowacourse.shoppingcart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static woowacourse.CustomerFixture.SAMPLE_CUSTOMER;
+import static woowacourse.CustomerFixture.CUSTOMER_EMAIL;
 
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,8 +27,6 @@ import woowacourse.shoppingcart.domain.customer.Customer;
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 class OrderDaoTest {
 
-    private static final String CUSTOMER_EMAIL = "email@email.com";
-
     private final JdbcTemplate jdbcTemplate;
     private final OrderDao orderDao;
     private final CustomerDao customerDao;
@@ -43,8 +43,7 @@ class OrderDaoTest {
 
     @BeforeEach
     void setUp() {
-        final Customer customer = new Customer(CUSTOMER_EMAIL, "password1!", "dwoo");
-        final Long savedId = customerDao.save(customer);
+        final Long savedId = customerDao.save(SAMPLE_CUSTOMER);
 
         productDao.save(new Product("banana", 1_000, 100,
                 new Image("imageUrl", "imageALt")));

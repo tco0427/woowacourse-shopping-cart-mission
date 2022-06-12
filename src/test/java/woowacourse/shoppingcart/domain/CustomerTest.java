@@ -2,8 +2,8 @@ package woowacourse.shoppingcart.domain;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static woowacourse.CustomerFixture.SAMPLE_EMAIL;
-import static woowacourse.CustomerFixture.SAMPLE_USERNAME;
+import static woowacourse.CustomerFixture.CUSTOMER_EMAIL;
+import static woowacourse.CustomerFixture.CUSTOMER_USERNAME;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,7 +22,7 @@ class CustomerTest {
     @Test
     public void checkCorrectPassword() {
         // given
-        final Customer customer = new Customer(SAMPLE_EMAIL, "password1!", SAMPLE_USERNAME);
+        final Customer customer = new Customer(CUSTOMER_EMAIL, "password1!", CUSTOMER_USERNAME);
 
         // when & then
         assertThatThrownBy(() -> customer.checkCorrectPassword("incorrect1!"))

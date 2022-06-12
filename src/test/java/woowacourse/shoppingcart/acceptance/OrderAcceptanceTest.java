@@ -1,9 +1,11 @@
 package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static woowacourse.CustomerFixture.SAMPLE_EMAIL;
-import static woowacourse.CustomerFixture.SAMPLE_PASSWORD;
-import static woowacourse.CustomerFixture.SAMPLE_USERNAME;
+import static woowacourse.CustomerFixture.CUSTOMER_EMAIL;
+import static woowacourse.CustomerFixture.CUSTOMER_PASSWORD;
+import static woowacourse.CustomerFixture.CUSTOMER_USERNAME;
+import static woowacourse.ProductFixture.BEER_IMAGE;
+import static woowacourse.ProductFixture.CHICKEN_IMAGE;
 
 import io.restassured.http.Header;
 import io.restassured.response.ExtractableResponse;
@@ -15,7 +17,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
-import woowacourse.shoppingcart.dto.ThumbnailImageDto;
 import woowacourse.shoppingcart.dto.cart.request.CartRequest;
 import woowacourse.shoppingcart.dto.cart.response.CartResponse;
 import woowacourse.shoppingcart.dto.customer.request.CustomerRequest;
@@ -28,10 +29,6 @@ import woowacourse.shoppingcart.dto.product.response.ProductResponse;
 public class OrderAcceptanceTest extends AcceptanceTest {
 
     private static final String BEARER = "Bearer ";
-    private static final ThumbnailImageDto CHICKEN_IMAGE =
-            new ThumbnailImageDto("http://example.com/chicken.jpg", "chicken");
-    private static final ThumbnailImageDto BEER_IMAGE =
-            new ThumbnailImageDto("http://example.com/beer.jpg", "beer");
 
     private Long cartId1;
     private Long cartId2;
@@ -126,10 +123,10 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     }
 
     private Header initCustomer() {
-        final CustomerRequest request = new CustomerRequest(SAMPLE_EMAIL, SAMPLE_PASSWORD, SAMPLE_USERNAME);
+        final CustomerRequest request = new CustomerRequest(CUSTOMER_EMAIL, CUSTOMER_PASSWORD, CUSTOMER_USERNAME);
         AcceptanceFixture.post(request, "/api/customers");
 
-        final TokenRequest tokenRequest = new TokenRequest(SAMPLE_EMAIL, SAMPLE_PASSWORD);
+        final TokenRequest tokenRequest = new TokenRequest(CUSTOMER_EMAIL, CUSTOMER_PASSWORD);
         final ExtractableResponse<Response> loginResponse =
                 AcceptanceFixture.post(tokenRequest, "/api/auth/login");
         final String accessToken = extractAccessToken(loginResponse);

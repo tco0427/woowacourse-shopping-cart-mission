@@ -2,24 +2,21 @@ package woowacourse.shoppingcart.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static woowacourse.ProductFixture.CHOCOLATE_IMAGE_DTO;
+import static woowacourse.ProductFixture.SAMPLE_IMAGE_DTO;
+import static woowacourse.ProductFixture.SNACK_IMAGE_DTO;
 
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import woowacourse.shoppingcart.dto.ThumbnailImageDto;
 import woowacourse.shoppingcart.dto.product.request.ProductRequest;
 import woowacourse.shoppingcart.dto.product.response.ProductResponse;
 import woowacourse.shoppingcart.exception.NotExistException;
 
 @SpringBootTest
 class ProductServiceTest {
-
-    private static final ThumbnailImageDto CHOCOLATE_IMAGE =
-            new ThumbnailImageDto("chocolateImageUrl", "chocolateImageAlt");
-    private static final ThumbnailImageDto SNACK_IMAGE = new ThumbnailImageDto("snackImageUrl", "snackImageAlt");
-    private static final ThumbnailImageDto SAMPLE_IMAGE = new ThumbnailImageDto("sampleUrl", "sampleAlt");
 
     private final ProductService productService;
 
@@ -32,7 +29,7 @@ class ProductServiceTest {
     @Test
     public void save() {
         // given
-        final ProductRequest request = new ProductRequest("상품", 10_000, 10, SAMPLE_IMAGE);
+        final ProductRequest request = new ProductRequest("상품", 10_000, 10, SAMPLE_IMAGE_DTO);
 
         // when
         final Long savedId = productService.save(request).getId();
@@ -47,11 +44,11 @@ class ProductServiceTest {
     public void findAll() {
         // given
         final ProductRequest chocolateRequest =
-                new ProductRequest("초콜렛", 1_000, 100, CHOCOLATE_IMAGE);
+                new ProductRequest("초콜렛", 1_000, 100, CHOCOLATE_IMAGE_DTO);
         final Long savedChocolateId = productService.save(chocolateRequest).getId();
 
         final ProductRequest snackRequest =
-                new ProductRequest("과자", 1_500, 1_000, SNACK_IMAGE);
+                new ProductRequest("과자", 1_500, 1_000, SNACK_IMAGE_DTO);
         final Long savedSnackId = productService.save(chocolateRequest).getId();
 
         // when
@@ -68,7 +65,7 @@ class ProductServiceTest {
     @Test
     public void findById() {
         // given
-        final ProductRequest request = new ProductRequest("상품", 10_000, 10, SAMPLE_IMAGE);
+        final ProductRequest request = new ProductRequest("상품", 10_000, 10, SAMPLE_IMAGE_DTO);
         final Long savedId = productService.save(request).getId();
 
         // when
@@ -82,7 +79,7 @@ class ProductServiceTest {
     @Test
     public void deleteById() {
         // given
-        final ProductRequest request = new ProductRequest("상품", 10_000, 10, SAMPLE_IMAGE);
+        final ProductRequest request = new ProductRequest("상품", 10_000, 10, SAMPLE_IMAGE_DTO);
         final Long savedId = productService.save(request).getId();
 
         // when

@@ -3,6 +3,8 @@ package woowacourse.shoppingcart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static woowacourse.ProductFixture.CHOCOLATE_IMAGE;
+import static woowacourse.ProductFixture.SNACK_IMAGE;
 
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -22,9 +24,6 @@ import woowacourse.shoppingcart.domain.customer.Customer;
 @Sql("classpath:schema.sql")
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 public class ProductDaoTest {
-
-    private static final Image CHOCOLATE_IMAGE = new Image("chocolateImageUrl", "chocolateImageAlt");
-    private static final Image SNACK_IMAGE = new Image("snackImageUrl", "snackImageAlt");
     
     private final ProductDao productDao;
     private final CartItemDao cartItemDao;

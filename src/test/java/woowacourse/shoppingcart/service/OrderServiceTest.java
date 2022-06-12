@@ -1,6 +1,10 @@
 package woowacourse.shoppingcart.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static woowacourse.CustomerFixture.CUSTOMER_REQUEST;
+import static woowacourse.CustomerFixture.CUSTOMER_EMAIL;
+import static woowacourse.ProductFixture.SAMPLE_PRODUCT_REQUEST;
+import static woowacourse.ProductFixture.SNACK_PRODUCT_REQUEST;
 
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,28 +13,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.dto.ThumbnailImageDto;
 import woowacourse.shoppingcart.dto.cart.request.CartRequest;
 import woowacourse.shoppingcart.dto.cart.response.CartResponse;
-import woowacourse.shoppingcart.dto.customer.request.CustomerRequest;
 import woowacourse.shoppingcart.dto.order.request.OrderRequest;
 import woowacourse.shoppingcart.dto.order.response.OrderResponse;
-import woowacourse.shoppingcart.dto.product.request.ProductRequest;
 
 @SpringBootTest
 @Sql("/truncate.sql")
 class OrderServiceTest {
-
-    private static final String CUSTOMER_EMAIL = "email@email.com";
-    private static final ThumbnailImageDto CHOCOLATE_IMAGE =
-            new ThumbnailImageDto("chocolateImageUrl", "chocolateImageAlt");
-    private static final ThumbnailImageDto SNACK_IMAGE = new ThumbnailImageDto("snackImageUrl", "snackImageAlt");
-    private static final ThumbnailImageDto SAMPLE_IMAGE = new ThumbnailImageDto("sampleUrl", "sampleAlt");
-
-    private static final ProductRequest SAMPLE_PRODUCT_REQUEST =
-            new ProductRequest("sample", 10_000, 10, SAMPLE_IMAGE);
-    private static final ProductRequest SNACK_PRODUCT_REQUEST =
-            new ProductRequest("snack", 1_000, 100, SNACK_IMAGE);
 
     private final OrderService orderService;
     private final CartService cartService;
@@ -48,8 +38,7 @@ class OrderServiceTest {
 
     @BeforeEach
     void setUp() {
-        final CustomerRequest request = new CustomerRequest(CUSTOMER_EMAIL, "password1!", "dwoo");
-        customerService.save(request);
+        customerService.save(CUSTOMER_REQUEST);
     }
 
     @DisplayName("고객이 로그인한 상태에서 장바구니에 있는 상품들로 주문을 할 수 있다.")
