@@ -1,7 +1,7 @@
 package woowacourse.shoppingcart.dto.product.request;
 
 import javax.validation.constraints.Min;
-import woowacourse.shoppingcart.dto.ThumbnailImage;
+import woowacourse.shoppingcart.dto.ThumbnailImageDto;
 
 public class ProductRequest {
 
@@ -12,16 +12,16 @@ public class ProductRequest {
 
     @Min(value = 1, message = "Invalid Quantity")
     private int stockQuantity;
-    private ThumbnailImage thumbnailImage;
+    private ThumbnailImageDto thumbnailImageDto;
 
     private ProductRequest() {
     }
 
-    public ProductRequest(String name, int price, int stockQuantity, ThumbnailImage thumbnailImage) {
+    public ProductRequest(String name, int price, int stockQuantity, ThumbnailImageDto thumbnailImageDto) {
         this.name = name;
         this.price = price;
         this.stockQuantity = stockQuantity;
-        this.thumbnailImage = thumbnailImage;
+        this.thumbnailImageDto = thumbnailImageDto;
     }
 
     public String getName() {
@@ -36,7 +36,7 @@ public class ProductRequest {
         return stockQuantity;
     }
 
-    public ThumbnailImage getThumbnailImage() {
-        return thumbnailImage;
+    public ThumbnailImageDto getThumbnailImage() {
+        return thumbnailImageDto;
     }
 }

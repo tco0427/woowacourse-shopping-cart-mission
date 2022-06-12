@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.dto.ThumbnailImage;
+import woowacourse.shoppingcart.dto.ThumbnailImageDto;
 import woowacourse.shoppingcart.dto.cart.request.CartRequest;
 import woowacourse.shoppingcart.dto.cart.response.CartResponse;
 import woowacourse.shoppingcart.dto.customer.request.CustomerRequest;
@@ -22,10 +22,10 @@ import woowacourse.shoppingcart.dto.product.request.ProductRequest;
 class OrderServiceTest {
 
     private static final String CUSTOMER_EMAIL = "email@email.com";
-    private static final ThumbnailImage CHOCOLATE_IMAGE =
-            new ThumbnailImage("chocolateImageUrl", "chocolateImageAlt");
-    private static final ThumbnailImage SNACK_IMAGE = new ThumbnailImage("snackImageUrl", "snackImageAlt");
-    private static final ThumbnailImage SAMPLE_IMAGE = new ThumbnailImage("sampleUrl", "sampleAlt");
+    private static final ThumbnailImageDto CHOCOLATE_IMAGE =
+            new ThumbnailImageDto("chocolateImageUrl", "chocolateImageAlt");
+    private static final ThumbnailImageDto SNACK_IMAGE = new ThumbnailImageDto("snackImageUrl", "snackImageAlt");
+    private static final ThumbnailImageDto SAMPLE_IMAGE = new ThumbnailImageDto("sampleUrl", "sampleAlt");
 
     private static final ProductRequest SAMPLE_PRODUCT_REQUEST =
             new ProductRequest("sample", 10_000, 10, SAMPLE_IMAGE);

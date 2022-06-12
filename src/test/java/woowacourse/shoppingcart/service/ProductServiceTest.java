@@ -8,7 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import woowacourse.shoppingcart.dto.ThumbnailImage;
+import woowacourse.shoppingcart.dto.ThumbnailImageDto;
 import woowacourse.shoppingcart.dto.product.request.ProductRequest;
 import woowacourse.shoppingcart.dto.product.response.ProductResponse;
 import woowacourse.shoppingcart.exception.NotExistException;
@@ -16,10 +16,10 @@ import woowacourse.shoppingcart.exception.NotExistException;
 @SpringBootTest
 class ProductServiceTest {
 
-    private static final ThumbnailImage CHOCOLATE_IMAGE =
-            new ThumbnailImage("chocolateImageUrl", "chocolateImageAlt");
-    private static final ThumbnailImage SNACK_IMAGE = new ThumbnailImage("snackImageUrl", "snackImageAlt");
-    private static final ThumbnailImage SAMPLE_IMAGE = new ThumbnailImage("sampleUrl", "sampleAlt");
+    private static final ThumbnailImageDto CHOCOLATE_IMAGE =
+            new ThumbnailImageDto("chocolateImageUrl", "chocolateImageAlt");
+    private static final ThumbnailImageDto SNACK_IMAGE = new ThumbnailImageDto("snackImageUrl", "snackImageAlt");
+    private static final ThumbnailImageDto SAMPLE_IMAGE = new ThumbnailImageDto("sampleUrl", "sampleAlt");
 
     private final ProductService productService;
 

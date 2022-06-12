@@ -1,7 +1,7 @@
 package woowacourse.shoppingcart.dto.product.response;
 
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.dto.ThumbnailImage;
+import woowacourse.shoppingcart.dto.ThumbnailImageDto;
 
 public class ProductResponse {
 
@@ -9,28 +9,28 @@ public class ProductResponse {
     private String name;
     private int price;
     private int quantity;
-    private ThumbnailImage thumbnailImage;
+    private ThumbnailImageDto thumbnailImageDto;
 
     private ProductResponse() {
     }
 
     public ProductResponse(Long id, Product product) {
         this(id, product.getName(), product.getPrice(), product.getStockQuantity(),
-                new ThumbnailImage(product.getImage()));
+                new ThumbnailImageDto(product.getImage()));
     }
 
     public static ProductResponse from(Product product) {
-        final ThumbnailImage thumbnailImage = new ThumbnailImage(product.getImage());
+        final ThumbnailImageDto thumbnailImageDto = new ThumbnailImageDto(product.getImage());
         return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getStockQuantity(),
-                thumbnailImage);
+                thumbnailImageDto);
     }
 
-    public ProductResponse(Long id, String name, int price, int quantity, ThumbnailImage thumbnailImage) {
+    public ProductResponse(Long id, String name, int price, int quantity, ThumbnailImageDto thumbnailImageDto) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.quantity = quantity;
-        this.thumbnailImage = thumbnailImage;
+        this.thumbnailImageDto = thumbnailImageDto;
     }
     public Long getId() {
         return id;
@@ -48,7 +48,7 @@ public class ProductResponse {
         return quantity;
     }
 
-    public ThumbnailImage getThumbnailImage() {
-        return thumbnailImage;
+    public ThumbnailImageDto getThumbnailImage() {
+        return thumbnailImageDto;
     }
 }

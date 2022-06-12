@@ -9,15 +9,15 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
-import woowacourse.shoppingcart.dto.ThumbnailImage;
+import woowacourse.shoppingcart.dto.ThumbnailImageDto;
 import woowacourse.shoppingcart.dto.product.request.ProductRequest;
 import woowacourse.shoppingcart.dto.product.response.ProductResponse;
 
 @DisplayName("상품 관련 기능")
 public class ProductAcceptanceTest extends AcceptanceTest {
 
-    private static final ThumbnailImage CHICKEN_IMAGE =
-            new ThumbnailImage("http://example.com/chicken.jpg", "chicken");
+    private static final ThumbnailImageDto CHICKEN_IMAGE =
+            new ThumbnailImageDto("http://example.com/chicken.jpg", "chicken");
 
     @DisplayName("상품 정보를 가지고 상품 추가를 요청하면 상품이 저장된다.")
     @Test

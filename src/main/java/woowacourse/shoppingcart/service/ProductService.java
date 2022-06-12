@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Image;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.dto.ThumbnailImage;
+import woowacourse.shoppingcart.dto.ThumbnailImageDto;
 import woowacourse.shoppingcart.dto.product.request.ProductRequest;
 import woowacourse.shoppingcart.dto.product.response.ProductResponse;
 
@@ -39,8 +39,8 @@ public class ProductService {
         return new ProductResponse(savedId, product);
     }
 
-    private Image makeImage(ThumbnailImage thumbnailImage) {
-        return new Image(thumbnailImage.getUrl(), thumbnailImage.getAlt());
+    private Image makeImage(ThumbnailImageDto thumbnailImageDto) {
+        return new Image(thumbnailImageDto.getUrl(), thumbnailImageDto.getAlt());
     }
 
     @Transactional(readOnly = true)

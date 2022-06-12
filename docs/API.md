@@ -144,7 +144,7 @@
         "name": "Apple Watch Series 5",
         "price": 120,
         "stockQuantity": 0,
-        "thumbnailImage": {
+        "thumbnailImageDto": {
             "url": "https://develoger.kr/wp-content/uploads/apple-watch-1.jpg",
             "alt": "Apple Watch Series 5"
         }
@@ -154,7 +154,7 @@
         "name": "Apple Watch Nike",
         "price": 400,
         "stockQuantity": 0,
-        "thumbnailImage": {
+        "thumbnailImageDto": {
             "url": "https://develoger.kr/wp-content/uploads/apple-watch-nike.jpg",
             "alt": "Apple Watch Nike"
         }
@@ -172,7 +172,7 @@
     "name" : "맥북",
     "price" : 1000,
     "stockQuantity" : 10,
-    "thumbnailImage" : {
+    "thumbnailImageDto" : {
       "url" : "url",
       "alt" : "이미지입니다"
     }
@@ -188,7 +188,7 @@
     "name" : "맥북",
     "price" : 1000,
     "stockQuantity" : 10,
-    "thumbnailImage" : {
+    "thumbnailImageDto" : {
       "url" : "url",
       "alt" : "이미지입니다"
     }
@@ -209,7 +209,7 @@
       "name": "Apple Watch Series 5",
       "price": 120,
       "stockQuantity": 0,
-      "thumbnailImage": {
+      "thumbnailImageDto": {
           "url": "https://develoger.kr/wp-content/uploads/apple-watch-1.jpg",
           "alt": "Apple Watch Series 5"
       }
@@ -243,7 +243,7 @@
         "name": "Apple Watch Series 5",
         "price": 120,
         "quantity": 10,
-        "thumbnailImage": {
+        "thumbnailImageDto": {
             "url": "https://develoger.kr/wp-content/uploads/apple-watch-1.jpg",
             "alt": "Apple Watch Series 5"
         }
@@ -254,7 +254,7 @@
         "name": "Apple Watch Nike",
         "price": 400,
         "quantity": 1,
-        "thumbnailImage": {
+        "thumbnailImageDto": {
             "url": "https://develoger.kr/wp-content/uploads/apple-watch-nike.jpg",
             "alt": "Apple Watch Nike"
         }
@@ -279,7 +279,7 @@
       "name": "Apple Watch Series 5",
       "price": 120,
       "quantity": 1,
-      "thumbnailImage": {
+      "thumbnailImageDto": {
           "url": "https://develoger.kr/wp-content/uploads/apple-watch-1.jpg",
           "alt": "Apple Watch Series 5"
       }
@@ -308,7 +308,7 @@
     "name" : "맥북",
     "price" : 1000,
     "quantity" : 10,
-    "thumbnailImage" : {
+    "thumbnailImageDto" : {
       "url" : "url",
       "alt" : "이미지입니다"
     }
@@ -369,7 +369,7 @@
             "name": "Apple Watch Series 5",
             "price": 120,
             "quantity": 10,
-            "thumbnailImage": {
+            "thumbnailImageDto": {
               "url": "https://develoger.kr/wp-content/uploads/apple-watch-1.jpg",
               "alt": "Apple Watch Series 5"
             }
@@ -379,7 +379,7 @@
             "name": "Apple Watch Nike",
             "price": 400,
             "quantity": 1,
-            "thumbnailImage": {
+            "thumbnailImageDto": {
               "url": "https://develoger.kr/wp-content/uploads/apple-watch-nike.jpg",
               "alt": "Apple Watch Nike"
             }
@@ -391,7 +391,7 @@
             "name": "Apple Watch Series 5",
             "price": 120,
             "quantity": 10,
-            "thumbnailImage": {
+            "thumbnailImageDto": {
               "url": "https://develoger.kr/wp-content/uploads/apple-watch-1.jpg",
               "alt": "Apple Watch Series 5"
             }
@@ -401,7 +401,7 @@
             "name": "Apple Watch Nike",
             "price": 400,
             "quantity": 1,
-            "thumbnailImage": {
+            "thumbnailImageDto": {
               "url": "https://develoger.kr/wp-content/uploads/apple-watch-nike.jpg",
               "alt": "Apple Watch Nike"
             }
@@ -445,7 +445,7 @@
             "name": "Apple Watch Series 5",
             "price": 120,
             "quantity": 10,
-            "thumbnailImage": {
+            "thumbnailImageDto": {
               "url": "https://develoger.kr/wp-content/uploads/apple-watch-1.jpg",
               "alt": "Apple Watch Series 5"
             }
@@ -455,7 +455,7 @@
             "name": "Apple Watch Nike",
             "price": 400,
             "quantity": 1,
-            "thumbnailImage": {
+            "thumbnailImageDto": {
               "url": "https://develoger.kr/wp-content/uploads/apple-watch-nike.jpg",
               "alt": "Apple Watch Nike"
             }

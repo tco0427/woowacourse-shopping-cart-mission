@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
-import woowacourse.shoppingcart.dto.ThumbnailImage;
+import woowacourse.shoppingcart.dto.ThumbnailImageDto;
 import woowacourse.shoppingcart.dto.cart.request.CartRemovalRequest;
 import woowacourse.shoppingcart.dto.cart.request.CartRequest;
 import woowacourse.shoppingcart.dto.cart.request.UpdateQuantityRequest;
@@ -29,10 +29,10 @@ import woowacourse.shoppingcart.dto.product.response.ProductResponse;
 public class CartAcceptanceTest extends AcceptanceTest {
 
     private static final String BEARER = "Bearer ";
-    private static final ThumbnailImage CHICKEN_IMAGE =
-            new ThumbnailImage("http://example.com/chicken.jpg", "chicken");
-    private static final ThumbnailImage BEER_IMAGE =
-            new ThumbnailImage("http://example.com/beer.jpg", "beer");
+    private static final ThumbnailImageDto CHICKEN_IMAGE =
+            new ThumbnailImageDto("http://example.com/chicken.jpg", "chicken");
+    private static final ThumbnailImageDto BEER_IMAGE =
+            new ThumbnailImageDto("http://example.com/beer.jpg", "beer");
 
     private Long productId1;
     private Long productId2;
