@@ -11,7 +11,7 @@ public class CartResponse {
     private String name;
     private int price;
     private int quantity;
-    private ThumbnailImageDto thumbnailImageDto;
+    private ThumbnailImageDto thumbnailImage;
 
     private CartResponse() {
     }
@@ -30,7 +30,7 @@ public class CartResponse {
         this.name = name;
         this.price = price;
         this.quantity = quantity;
-        this.thumbnailImageDto = thumbnailImageDto;
+        this.thumbnailImage = thumbnailImageDto;
     }
 
     public Long getId() {
@@ -54,6 +54,6 @@ public class CartResponse {
     }
 
     public ThumbnailImageDto getThumbnailImage() {
-        return thumbnailImageDto;
+        return thumbnailImage;
     }
 }

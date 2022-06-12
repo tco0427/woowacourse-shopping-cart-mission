@@ -15,6 +15,7 @@ import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Image;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.customer.Customer;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -26,9 +27,13 @@ public class ProductDaoTest {
     private static final Image SNACK_IMAGE = new Image("snackImageUrl", "snackImageAlt");
     
     private final ProductDao productDao;
+    private final CartItemDao cartItemDao;
+    private final CustomerDao customerDao;
 
     public ProductDaoTest(JdbcTemplate jdbcTemplate) {
         this.productDao = new ProductDao(jdbcTemplate);
+        this.cartItemDao = new CartItemDao(jdbcTemplate);
+        this.customerDao = new CustomerDao(jdbcTemplate);
     }
 
     @DisplayName("product 정보를 저장하면, id값을 반환해준다.")
@@ -100,5 +105,25 @@ public class ProductDaoTest {
         assertDoesNotThrow(() -> productDao.deleteById(savedId));
         final int afterSize = productDao.findAll().size();
         assertThat(beforeSize -1).isEqualTo(afterSize);
+    }
+
+    @DisplayName("장바구니 아이템의 id를 통해서 장바구니의 담긴 상품의 재고수량을 수정할 수 있다.")
+    @Test
+    public void updateStockQuantity() {
+        // given
+        final Customer customer = new Customer("email@email.com", "password1!", "dwoo");
+        final Long customerSavedId = customerDao.save(customer);
+
+        final Long productSavedId = productDao.save(new Product("banana", 1_000, 100,
+                new Image("imageUrl", "imageALt")));
+
+        final Long cartSavedId = cartItemDao.addCartItem(customerSavedId, productSavedId, 10);
+
+        // when
+        productDao.updateStockQuantity(cartSavedId, productSavedId);
+
+        // then
+        final Product product = productDao.findById(productSavedId);
+        assertThat(product.getStockQuantity()).isEqualTo(90);
     }
 }

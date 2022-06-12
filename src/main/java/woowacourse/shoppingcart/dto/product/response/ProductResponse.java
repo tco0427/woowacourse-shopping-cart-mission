@@ -9,7 +9,7 @@ public class ProductResponse {
     private String name;
     private int price;
     private int quantity;
-    private ThumbnailImageDto thumbnailImageDto;
+    private ThumbnailImageDto thumbnailImage;
 
     private ProductResponse() {
     }
@@ -30,7 +30,7 @@ public class ProductResponse {
         this.name = name;
         this.price = price;
         this.quantity = quantity;
-        this.thumbnailImageDto = thumbnailImageDto;
+        this.thumbnailImage = thumbnailImageDto;
     }
     public Long getId() {
         return id;
@@ -49,6 +49,6 @@ public class ProductResponse {
     }
 
     public ThumbnailImageDto getThumbnailImage() {
-        return thumbnailImageDto;
+        return thumbnailImage;
     }
 }

@@ -12,7 +12,6 @@ import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Order;
-import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.order.request.OrderRequest;
 import woowacourse.shoppingcart.dto.order.response.OrderResponse;
@@ -49,9 +48,7 @@ public class OrderService {
 
     private void reduceStockQuantity(List<Cart> carts) {
         for (Cart cart : carts) {
-            final Product product = productDao.findById(cart.getProduct().getId());
-            final int quantity = product.getStockQuantity() - cart.getQuantity();
-            productDao.updateQuantity(product.getId(), quantity);
+            productDao.updateStockQuantity(cart.getId(), cart.getProduct().getId());
         }
     }
 

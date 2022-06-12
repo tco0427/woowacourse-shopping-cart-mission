@@ -12,16 +12,16 @@ public class ProductRequest {
 
     @Min(value = 1, message = "Invalid Quantity")
     private int stockQuantity;
-    private ThumbnailImageDto thumbnailImageDto;
+    private ThumbnailImageDto thumbnailImage;
 
     private ProductRequest() {
     }
 
-    public ProductRequest(String name, int price, int stockQuantity, ThumbnailImageDto thumbnailImageDto) {
+    public ProductRequest(String name, int price, int stockQuantity, ThumbnailImageDto thumbnailImage) {
         this.name = name;
         this.price = price;
         this.stockQuantity = stockQuantity;
-        this.thumbnailImageDto = thumbnailImageDto;
+        this.thumbnailImage = thumbnailImage;
     }
 
     public String getName() {
@@ -37,6 +37,6 @@ public class ProductRequest {
     }
 
     public ThumbnailImageDto getThumbnailImage() {
-        return thumbnailImageDto;
+        return thumbnailImage;
     }
 }

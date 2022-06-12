@@ -87,6 +87,17 @@ public class ProductDao {
         jdbcTemplate.update(query, Map.of("id", id, "quantity", quantity));
     }
 
+    public void updateStockQuantity(Long cartId, Long productId) {
+        final String query = "UPDATE product SET product.stock_quantity = "
+                + "(SELECT (product.stock_quantity - cart_item.quantity) "
+                + "FROM product "
+                + "JOIN cart_item ON cart_item.product_id = product.id "
+                + "WHERE cart_item.id = :cartId) "
+                + "WHERE id = :productId";
+
+        jdbcTemplate.update(query, Map.of("cartId", cartId, "productId", productId));
+    }
+
     private static RowMapper<Product> createProductRowMapper() {
         return (resultSet, rowNum) -> {
             final long id = resultSet.getLong("id");
